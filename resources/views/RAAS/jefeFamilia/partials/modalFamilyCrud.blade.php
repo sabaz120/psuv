@@ -43,7 +43,7 @@
                                 <label for="tipoVoto">Tipo de voto</label>
                                 <select class="form-control" v-model="familyForm.tipo_voto" v-show="familyForm.personal_caracterizacion">
                                     <option value="" selected>Seleccione</option>
-                                    <option v-for="tipoVoto in tipoDeVotos" :value="tipoVoto">@{{tipoVoto}}</option>
+                                    <option v-for="tipoVoto in tipoDeVotos" :value="tipoVoto.toLowerCase()">@{{tipoVoto}}</option>
                                 </select>
                                 <select class="form-control" v-show="!familyForm.personal_caracterizacion" disabled>
                                     <option value="" selected>Seleccione</option>

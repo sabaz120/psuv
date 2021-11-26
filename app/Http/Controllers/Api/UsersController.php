@@ -40,7 +40,10 @@ class UsersController extends Controller
                 ->orWhere("last_name", "LIKE", "%".$search."%");
             }
 
-            $this->addFilters($request, $query);
+            $query->orderBy("created_at","DESC");
+            $query=$query->paginate(15);
+            return response()->json($query);
+            // $this->addFilters($request, $query);
 
             $response = $this->getSuccessResponse(
                UserCollection::collection($query),
@@ -81,6 +84,22 @@ class UsersController extends Controller
             $entity=Model::create($data);
             //Assign role to user entity
             $entity->assignRole($data['role_id']);
+            //isset instituciones
+            if(isset($data['instituciones'])){
+                foreach($data['instituciones'] as $institucion){
+                    $entity->instituciones()->create([
+                        "institucion_id"=>$institucion
+                    ]);
+                }
+            }
+            //isset instituciones
+            if(isset($data['movimientos'])){
+                foreach($data['movimientos'] as $movimiento){
+                    $entity->movimientos()->create([
+                        "movimiento_id"=>$movimiento
+                    ]);
+                }
+            }
             DB::commit();
             $response = $this->getSuccessResponse($entity,"Registro de usuario exitoso");
         } catch (\Exception $e) {
@@ -101,6 +120,9 @@ class UsersController extends Controller
             //Bcrypt pass
             if(isset($data['password']) && $request->input('password'))
             $data['password']=bcrypt($data['password']);
+            if(!isset($data['municipio_id'])){
+                $data['municipio_id']=null;
+            }
             //Find entity
             $entity=Model::find($id);
             if (!$entity) {
@@ -112,6 +134,28 @@ class UsersController extends Controller
             if(isset($data['role_id'])){
                //\Spatie\Permission\Models\Role
                $entity->syncRoles([$data['role_id']]);
+            }
+            //isset instituciones
+            if(isset($data['instituciones'])){
+                $entity->instituciones()->delete();
+                foreach($data['instituciones'] as $institucion){
+                    $entity->instituciones()->create([
+                        "institucion_id"=>$institucion
+                    ]);
+                }
+            }else{
+                $entity->instituciones()->delete();
+            }
+            //isset instituciones
+            if(isset($data['movimientos'])){
+                $entity->movimientos()->delete();
+                foreach($data['movimientos'] as $movimiento){
+                    $entity->movimientos()->create([
+                        "movimiento_id"=>$movimiento
+                    ]);
+                }
+            }else{
+                $entity->movimientos()->delete();
             }
             DB::commit();
             $response = $this->getSuccessResponse($entity , 'Actualización exitosa' );

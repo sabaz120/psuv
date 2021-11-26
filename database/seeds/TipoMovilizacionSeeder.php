@@ -15,9 +15,8 @@ class TipoMovilizacionSeeder extends Seeder
     public function run()
     {
         $movilizaciones = [
-            "A otros municipios",
-            "Otras parroquias",
-            "No aplica"
+            "SI",
+            "NO"
         ];
 
         foreach($movilizaciones as $movilizacion){

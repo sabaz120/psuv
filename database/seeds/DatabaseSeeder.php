@@ -11,6 +11,8 @@ use Database\Seeders\TipoMovilizacionSeeder;
 use Database\Seeders\ElectorSeeder;
 use Database\Seeders\ComunidadesSeeder;
 use Database\Seeders\CalleSeeder;
+use Database\Seeders\InstitutionSeeder;
+use Database\Seeders\PermissionSeeder;
 //use Database\Seeders\RoleSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,17 +25,21 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $seedersArray = [
-            RoleSeeder::class,
-            UsersSeeder::class,
-            EstadoSeeder::class,
+            // RoleSeeder::class,
+            // UsersSeeder::class,
+            // EstadoSeeder::class,
             //MunicipioSeeder::class,
             //ParroquiaSeeder::class,
             //CentroVotacionSeeder::class,
-            PartidoPoliticoSeeder::class,
-            TipoMovilizacionSeeder::class,
+            // PartidoPoliticoSeeder::class,
+            // TipoMovilizacionSeeder::class,
             //ElectorSeeder::class,
             //ComunidadesSeeder::class,
             //CalleSeeder::class,
+
+            // InstitutionSeeder::class,
+            PermissionSeeder::class,
+
         ];
         //call seeders
         foreach ($seedersArray as $seeder) $this->call($seeder);

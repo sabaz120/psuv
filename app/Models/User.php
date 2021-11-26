@@ -25,6 +25,8 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'email',
         'name',
+        'last_name',
+        'municipio_id',
         'password',
         'verification_token',
     ];
@@ -69,5 +71,41 @@ class User extends Authenticatable implements JWTSubject
     public function password_reset(){
       return $this->hasOne(PasswordReset::class, 'email', 'email')->orderBy('created_at', 'desc');
     }
+
+    public function municipio(){
+
+        return $this->belongsTo(Municipio::class);
+
+    }
+
+    public function instituciones(){
+
+        return $this->hasMany(UserInstitucion::class);
+
+    }
+
+    public function movimientos(){
+
+        return $this->hasMany(UserMovimiento::class);
+
+    }
+
+    
+    public function getFullNameAttribute()
+    {
+        $name = $this->name;
+        // if (!empty($this->segundo_nombre)) {
+        //     $name .= ' ' .$this->segundo_nombre;
+        // }
+        if (!empty($this->last_name)) {
+            $name .= ' ' .$this->last_name;
+        }
+        // if (!empty($this->segundo_apellido)) {
+        //     $name .= ' ' .$this->segundo_apellido;
+        // }
+        return $name;
+    }
+
+    
 
 }

@@ -63,7 +63,7 @@ class JefeComunidadController extends Controller
             return response()->json(["success" => false, "msg" => "Esta cédula ya pertenece a un Jefe de Comunidad"]);
         }*/
 
-        $response = $this->searchPersonalCaracterizacionOrElector($request->cedula, \Auth::user()->municipio_id);
+        $response = $this->searchPersonalCaracterizacionOrElector($request->cedula, $request->municipio_id);
         
         return response()->json($response);
         
@@ -202,7 +202,16 @@ class JefeComunidadController extends Controller
 
     function fetch(Request $request){
 
-        $jefeComunidad = JefeComunidad::with("personalCaracterizacion", "personalCaracterizacion.municipio", "personalCaracterizacion.parroquia", "personalCaracterizacion.centroVotacion", "personalCaracterizacion.partidoPolitico", "personalCaracterizacion.movilizacion", "comunidad", "jefeUbch", "jefeUbch.personalCaracterizacion", "jefeUbch.personalCaracterizacion.centroVotacion")->orderBy("id", "desc")->paginate(15);
+        $query = JefeComunidad::with("personalCaracterizacion", "personalCaracterizacion.municipio", "personalCaracterizacion.parroquia", "personalCaracterizacion.centroVotacion", "personalCaracterizacion.partidoPolitico", "personalCaracterizacion.movilizacion", "comunidad", "jefeUbch", "jefeUbch.personalCaracterizacion", "jefeUbch.personalCaracterizacion.centroVotacion", "jefeUbch.centroVotacion");
+        
+        if($request->municipio_id != null){
+            $municipio_id = $request->municipio_id;
+            $query->whereHas("personalCaracterizacion", function($q) use($municipio_id){
+                $q->where('municipio_id', $municipio_id);
+            });
+        }
+
+        $jefeComunidad = $query->orderBy("id", "desc")->paginate(15);
         
         return response()->json($jefeComunidad);
 
@@ -210,19 +219,30 @@ class JefeComunidadController extends Controller
 
     function search(Request $request){
 
-        if(!isset($request->cedula)){
-            
-            $jefeUbch = JefeComunidad::with("personalCaracterizacion", "personalCaracterizacion.municipio", "personalCaracterizacion.parroquia", "personalCaracterizacion.centroVotacion", "personalCaracterizacion.partidoPolitico", "personalCaracterizacion.movilizacion", "comunidad", "jefeUbch", "jefeUbch.personalCaracterizacion", "jefeUbch.personalCaracterizacion.centroVotacion")->orderBy("id", "desc")->paginate(15);
+     
+        $cedula = $request->cedula;
+        $query = JefeComunidad::with("personalCaracterizacion", "personalCaracterizacion.municipio", "personalCaracterizacion.parroquia", "personalCaracterizacion.centroVotacion", "personalCaracterizacion.partidoPolitico", "personalCaracterizacion.movilizacion", "comunidad", "jefeUbch", "jefeUbch.personalCaracterizacion", "jefeUbch.personalCaracterizacion.centroVotacion", "jefeUbch.centroVotacion");
         
-            return response()->json($jefeUbch);
-
+        if($request->municipio_id != null){
+ 
+            $municipio_id = $request->municipio_id;
+            $query->whereHas("personalCaracterizacion", function($q) use($municipio_id){
+                $q->where('municipio_id', $municipio_id);
+            });
         }
 
+        if($cedula){
+         
+            $jefeUbch = $query->whereHas('personalCaracterizacion', function($q) use($cedula){
+                $q->where('cedula', $cedula);
+            })->orderBy("id", "desc")->paginate(15);
+        
+        }else{
 
-        $cedula = $request->cedula;
-        $jefeUbch = JefeComunidad::with("personalCaracterizacion", "personalCaracterizacion.municipio", "personalCaracterizacion.parroquia", "personalCaracterizacion.centroVotacion", "personalCaracterizacion.partidoPolitico", "personalCaracterizacion.movilizacion", "comunidad", "jefeUbch", "jefeUbch.personalCaracterizacion", "jefeUbch.personalCaracterizacion.centroVotacion")->whereHas('personalCaracterizacion', function($q) use($cedula){
-            $q->where('cedula', $cedula);
-        })->orderBy("id", "desc")->paginate(15);
+            $jefeUbch = $query->orderBy("id", "desc")->paginate(15);
+
+        }
+        
 
         return response()->json($jefeUbch);
 

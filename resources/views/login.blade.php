@@ -13,11 +13,11 @@
             <div class="login100-form validate-form col-md-6" v-cloak>
 
                 <p class="text-center">
-                    <img src="{{ url('psuv.png') }}" style="width: 150px;">
+                    <img src="{{ url('psuv.png') }}" style="width: 250px;">
                 </p>
 
 
-                <div class="wrap-input100 validate-input">
+                <div class="wrap-input100 validate-input" style="margin-top: 50px;">
                     <input class="input100" type="text" v-model="email">
                     <span class="focus-input100"></span>
                     <span class="label-input100">Correo electrónico</span>

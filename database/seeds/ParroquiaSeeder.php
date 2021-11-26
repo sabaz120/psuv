@@ -48,7 +48,7 @@ class ParroquiaSeeder extends Seeder
 
         foreach($parroquias as $parroquia){
 
-            $this->store($parroquia);
+            //$this->store($parroquia);
 
         }
 

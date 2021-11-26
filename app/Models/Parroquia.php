@@ -40,6 +40,12 @@ class Parroquia extends Model
 
     }
 
+    public function metasUbchs(){
+
+        return $this->hasMany(MetasUbch::class);
+
+    }
+
 
 
 }

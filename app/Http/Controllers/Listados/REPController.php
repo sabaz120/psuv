@@ -64,17 +64,6 @@ class REPController extends Controller
     
     }
 
-    function getMunicipioAmount(Request $request){
-
-        if($request->municipio == 0){
-            return Elector::with("municipio", "parroquia","centroVotacion")->count();
-        }else{
-            return Elector::where("municipio_id", $request->municipio)->with("municipio", "parroquia","centroVotacion")->count();
-
-        }
-        
-    }
-
     function storeExportJob(Request $request){
 
         $job = new ExportJob;

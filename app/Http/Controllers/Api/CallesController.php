@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\Calle as Model;
+use App\Models\JefeCalle;
 use Illuminate\Http\Request;
 use App\Http\Requests\Calle\CalleStoreRequest as EntityRequest;
 use App\Http\Requests\Calle\CalleUpdateRequest as EntityUpdateRequest;
@@ -14,8 +15,10 @@ class CallesController extends Controller
    public function index( Request $request)
     {
         try {
+            $search = $request->input('search');
             $comunidad_id = $request->input('comunidad_id');
             $municipio_id = $request->input('municipio_id');
+            $page = $request->input('page');
             $includes= $request->input('includes') ? $request->input('includes') : [];
             //Init query
             $query=Model::query();
@@ -25,6 +28,9 @@ class CallesController extends Controller
             if ($comunidad_id) {
                 $query->where('comunidad_id', $comunidad_id);
             }
+            if ($search) {
+                $query->where('nombre', "LIKE","%{$search}%");
+            }
             if($municipio_id){
                 $query->whereHas('comunidad',function($query) use($municipio_id){
                     $query->whereHas('parroquia',function($query) use($municipio_id){
@@ -33,7 +39,10 @@ class CallesController extends Controller
                 });
             }
             $query->orderBy("created_at","DESC");
+            if($page)
             $query=$query->paginate(15);
+            else
+            $query=$query->get();
             return response()->json($query,200);
             $response = $this->getSuccessResponse(
                $query,
@@ -116,6 +125,9 @@ class CallesController extends Controller
             DB::beginTransaction();
             $entity=Model::find($id);
             $this->validModel($entity, 'Calle no encontrada');
+            $jefeCalle=JefeCalle::where('calle_id',$id)->first();
+            if($jefeCalle)
+                throw new \Exception('Esta calle no puede ser eliminada, ya que uno o mas jefes de calles están asociados a ella.', 404);
             $entity->delete();
             DB::commit();
             $response = $this->getSuccessResponse('', "Eliminación exitosa" );

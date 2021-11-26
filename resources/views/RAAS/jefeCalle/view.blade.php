@@ -40,7 +40,24 @@
                 <div class="card-body">
                     <!--begin: Datatable-->
                     <div class="datatable datatable-bordered datatable-head-custom datatable-default datatable-primary datatable-loaded" id="kt_datatable" style="">
-                        
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="float-right">
+                                        <div class="form-group">
+                                            <label>Buscar</label>
+                                            <div class="d-flex">
+                                                <input class="form-control" placeholder="Por cédula o nombre" v-model="searchText">
+                                                <button class="btn btn-primary" v-if="!loading" @click="fetch()">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                                <div class="spinner spinner-primary ml-1 mr-13" v-if="loading"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>

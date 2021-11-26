@@ -29,6 +29,7 @@
             jefe_comunidad:null,
             cedula_jefe:"",
             cedula_jefe_error:"",
+            searchText:"",
             //Array data
             comunidades:[],
             calles:[],
@@ -59,7 +60,12 @@
         },
         methods: {
             async fetch(link = ""){
-                let res = await axios.get(link == "" ? "{{ route('api.jefe-calle.index') }}" : link.url)
+                let filters={
+                    params:{
+                        search:this.searchText
+                    }
+                };
+                let res = await axios.get(link == "" ? "{{ route('api.jefe-calle.index') }}" : link.url,filters)
                 this.results = res.data.data
                 this.links = res.data.links
                 this.currentPage = res.data.current_page
@@ -357,7 +363,7 @@
                         this.form.personal_caraterizacion=response.data.elector;
                         this.cedula_jefe_error="";
                         if(response.data.elector.tipo_voto){
-                            this.form.tipo_voto=response.data.elector.tipo_voto;
+                            this.form.tipo_voto=response.data.elector.tipo_voto.toLowerCase();
                         }
                         if(response.data.elector.partido_politico_id){
                             this.form.partido_politico_id=response.data.elector.partido_politico_id;
@@ -395,7 +401,9 @@
                     }
                     this.loading = true;
                     let filters = {
-                        comunidad_id:this.form.comunidad_id
+                        comunidad_id:this.form.comunidad_id,
+                        order_by:"nombre",
+                        order_direction:"ASC"
                     }
                     for(let i=0;i<this.comunidades.length;i++){
                         console.log(this.comunidades[i]);
@@ -412,7 +420,7 @@
                     });
                     this.loading = false;
                     this.form.calle_id="0";
-                    this.calles = response.data.data;
+                    this.calles = response.data;
                     if(this.calles.length==0){
                         swal({
                             text:"La comunidad de este jefe de calle, no posee calles.",

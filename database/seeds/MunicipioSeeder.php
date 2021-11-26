@@ -25,7 +25,7 @@ class MunicipioSeeder extends Seeder
 
         foreach($municipios as $municipio){
 
-            $this->store($municipio);
+            //$this->store($municipio);
 
         }
 

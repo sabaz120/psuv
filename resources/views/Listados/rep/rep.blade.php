@@ -126,7 +126,6 @@
                         }
 
                     }
-                    
 
                     window.location.href="{{ url('/listado/importar/rep') }}"+"?"+paramsMunicipio+paramsParroquia+paramsCentroVotacion
                     

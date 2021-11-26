@@ -32,7 +32,7 @@
                             </div>
                         </div>
 
-                        
+                        {{--
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label >Tipo</label>
@@ -47,6 +47,7 @@
                                 <input type="text" class="form-control" maxlength="100" v-model="form.sector" >
                             </div>
                         </div>
+                        --}}
 
                     </div>
                 </div>                    

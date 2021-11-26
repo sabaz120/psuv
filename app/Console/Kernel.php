@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('rep:export')->everyFiveMinutes();
+        $schedule->command('rep:export')->everyTwoMinutes();
     }
 
     /**

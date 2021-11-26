@@ -296,7 +296,7 @@ const app = new Vue({
 
             this.cedulaSearching = true
 
-            let res = await axios.post("{{ url('raas/ubch/search-by-cedula') }}", {cedula: this.cedula})
+            let res = await axios.post("{{ url('raas/ubch/search-by-cedula') }}", {cedula: this.cedula, municipio_id: "{{ \Auth::user()->municipio_id }}"})
 
             if(res.data.success == false){
                 this.readonlyCedula = false
@@ -370,7 +370,7 @@ const app = new Vue({
         
         async fetch(link = ""){
 
-            let res = await axios.get(link == "" ? "{{ url('api/raas/ubch/fetch') }}" : link.url)
+            let res = await axios.get(link == "" ? "{{ url('api/raas/ubch/fetch') }}"+"?_token={{ csrf_token() }}" : link.url+"&_token={{ csrf_token() }}")
             this.jefesUbch = res.data.data
             this.links = res.data.links
             this.currentPage = res.data.current_page
@@ -563,7 +563,10 @@ const app = new Vue({
         async search(){
 
             this.searchLoading = true
-            let res = await axios.post("{{ url('/api/raas/ubch/search') }}", {"cedula": this.cedulaSearch})
+            let res = await axios.get("{{ url('/api/raas/ubch/search') }}",  {"params": {
+                    "search": this.cedulaSearch,
+                    "_token": "{{ csrf_token() }}"
+            }})
             this.searchLoading = false
 
             this.jefesUbch = res.data.data

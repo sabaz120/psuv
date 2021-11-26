@@ -23,7 +23,7 @@ License: You must have a valid license purchased only from themeforest(the above
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 		<link rel="canonical" href="https://keenthemes.com/metronic" />
 		<!--begin::Fonts-->
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+		<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" /> -->
 		<!--end::Fonts-->
 		<!--begin::Global Theme Styles(used by all pages)-->
 		<link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
@@ -151,7 +151,100 @@ License: You must have a valid license purchased only from themeforest(the above
 										<span class="menu-text text-white">Inicio</span>
 									</a>
 								</li>--}}
+								
+								@canany([
+									'gestion comunidades',
+									"gestion calles",
+									"gestion usuarios",
+									"gestion roles",
+									"gestion candidatos",
+									"gestion centros de votacion"
+								])
+								<li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+									<a href="javascript:;" class="menu-link menu-toggle">
+										<i class="menu-icon flaticon2-group text-white"></i>
+										<span class="menu-text text-white">Módulos administrativos</span>
+										<i class="menu-arrow"></i>
+									</a>
+									<div class="menu-submenu">
+										<i class="menu-arrow"></i>
+										<ul class="menu-subnav">
+											<li class="menu-item menu-item-parent" aria-haspopup="true">
+												<span class="menu-link">
+													<span class="menu-text text-white">Actions</span>
+												</span>
+											</li>
+											@can('gestion usuarios')
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('admin/usuarios') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Gestión de usuarios</span>
+												</a>
+											</li>
+											@endcan
+											@can('gestion roles')
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('admin/roles') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Gestión de roles</span>
+												</a>
+											</li>
+											@endcan
+											@can('gestion comunidades')
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('admin/comunidad') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Gestión de comunidades</span>
+												</a>
+											</li>
+											@endcan
+											@can('gestion calles')
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('admin/calles') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Gestión de calles</span>
+												</a>
+											</li>
+											@endcan
+											@can('gestion candidatos')
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('admin/candidatos') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Gestionar candidatos</span>
+												</a>
+											</li>
+											@endcan
+											@can('gestion centros de votacion')
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('admin/centros_votacion') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Centros de votación</span>
+												</a>
+											</li>
+											@endcan
+	
+										</ul>
+									</div>
+								</li>
+								@endcanany
 
+								@canany([
+									'raas ubch',
+									"raas jefe comunidad",
+									"raas jefe calle",
+								])
                                 <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
 									<a href="javascript:;" class="menu-link menu-toggle">
 										<i class="menu-icon flaticon2-group text-white"></i>
@@ -166,6 +259,7 @@ License: You must have a valid license purchased only from themeforest(the above
 													<span class="menu-text text-white">Actions</span>
 												</span>
 											</li>
+											@can('raas ubch')
 											<li class="menu-item" aria-haspopup="true">
 												<a href="{{ route('raas.ubch') }}" class="menu-link">
 													<i class="menu-bullet menu-bullet-line">
@@ -174,6 +268,8 @@ License: You must have a valid license purchased only from themeforest(the above
 													<span class="menu-text text-white">Gestionar UBCH</span>
 												</a>
 											</li>
+											@endcan
+											@can('raas jefe comunidad')
 											<li class="menu-item" aria-haspopup="true">
 												<a href="{{ route('raas.jefe-comunidad') }}" class="menu-link">
 													<i class="menu-bullet menu-bullet-line">
@@ -182,6 +278,8 @@ License: You must have a valid license purchased only from themeforest(the above
 													<span class="menu-text text-white">Gestionar Jefe de Comunidad</span>
 												</a>
 											</li>
+											@endcan
+											@can('raas jefe calle')
                                             <li class="menu-item" aria-haspopup="true">
 												<a href="{{ route('raas.jefe-calle') }}" class="menu-link">
 													<i class="menu-bullet menu-bullet-line">
@@ -190,52 +288,15 @@ License: You must have a valid license purchased only from themeforest(the above
 													<span class="menu-text text-white">Gestionar Jefe de Calles</span>
 												</a>
 											</li>
-                                            {{--<li class="menu-item" aria-haspopup="true">
-												<a href="{{ route('raas.jefe-familia') }}" class="menu-link">
-													<i class="menu-bullet menu-bullet-line">
-														<span></span>
-													</i>
-													<span class="menu-text text-white">Gestionar Núcleos Familiares</span>
-												</a>
-											</li>--}}
+											@endcan
 										</ul>
 									</div>
 								</li>
+								@endcanany
+								
+								
 
-								<li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
-									<a href="javascript:;" class="menu-link menu-toggle">
-										<i class="menu-icon flaticon2-group text-white"></i>
-										<span class="menu-text text-white">1XFamilia</span>
-										<i class="menu-arrow"></i>
-									</a>
-									<div class="menu-submenu">
-										<i class="menu-arrow"></i>
-										<ul class="menu-subnav">
-											<li class="menu-item menu-item-parent" aria-haspopup="true">
-												<span class="menu-link">
-													<span class="menu-text text-white">Actions</span>
-												</span>
-											</li>
-											<li class="menu-item" aria-haspopup="true">
-												<a href="{{ route('raas.jefe-familia') }}" class="menu-link">
-													<i class="menu-bullet menu-bullet-line">
-														<span></span>
-													</i>
-													<span class="menu-text text-white">Gestionar Núcleos Familiares</span>
-												</a>
-											</li>
-											{{--<li class="menu-item" aria-haspopup="true">
-												<a href="{{ route('raas.jefe-familia') }}" class="menu-link">
-													<i class="menu-bullet menu-bullet-line">
-														<span></span>
-													</i>
-													<span class="menu-text text-white">Listado 1 * Familia</span>
-												</a>
-											</li>--}}
-										</ul>
-									</div>
-								</li>
-
+								@can('rep listado electores')
 								<li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
 									<a href="javascript:;" class="menu-link menu-toggle">
 										<i class="menu-icon flaticon2-group text-white"></i>
@@ -261,11 +322,13 @@ License: You must have a valid license purchased only from themeforest(the above
 										</ul>
 									</div>
 								</li>
+								@endcan
 
+								@can('nucleos familiares')
 								<li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
 									<a href="javascript:;" class="menu-link menu-toggle">
 										<i class="menu-icon flaticon2-group text-white"></i>
-										<span class="menu-text text-white">Módulos administrativos</span>
+										<span class="menu-text text-white">1XFamilia</span>
 										<i class="menu-arrow"></i>
 									</a>
 									<div class="menu-submenu">
@@ -277,27 +340,406 @@ License: You must have a valid license purchased only from themeforest(the above
 												</span>
 											</li>
 											<li class="menu-item" aria-haspopup="true">
-												<a href="{{ url('admin/comunidad') }}" class="menu-link">
+												<a href="{{ route('raas.jefe-familia') }}" class="menu-link">
 													<i class="menu-bullet menu-bullet-line">
 														<span></span>
 													</i>
-													<span class="menu-text text-white">Gestión de comunidades</span>
+													<span class="menu-text text-white">Gestionar Núcleos Familiares</span>
 												</a>
 											</li>
+										</ul>
+									</div>
+								</li>
+								@endcan
+								
+								@canany([
+									"reporte estructura raas",	
+									"reporte movilizacion electores",	
+									"reporte carga",
+									"reporte listado jefes",
+								])
+								<li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+									<a href="javascript:;" class="menu-link menu-toggle">
+										<i class="menu-icon flaticon2-group text-white"></i>
+										<span class="menu-text text-white">Reportes</span>
+										<i class="menu-arrow"></i>
+									</a>
+									<div class="menu-submenu">
+										<i class="menu-arrow"></i>
+										<ul class="menu-subnav">
+											<li class="menu-item menu-item-parent" aria-haspopup="true">
+												<span class="menu-link">
+													<span class="menu-text text-white">Actions</span>
+												</span>
+											</li>
+											@can("reporte estructura raas")
 											<li class="menu-item" aria-haspopup="true">
-												<a href="{{ url('admin/calles') }}" class="menu-link">
+												<a href="{{ url('raas/reportes/estructura') }}" class="menu-link">
 													<i class="menu-bullet menu-bullet-line">
 														<span></span>
 													</i>
-													<span class="menu-text text-white">Gestión de calles</span>
+													<span class="menu-text text-white">Estructura RAAS</span>
+												</a>
+											</li>
+											@endcan
+											
+											@can("reporte movilizacion electores")
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('raas/reportes/movilizacion_electores') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Movilización de electores</span>
+												</a>
+											</li>
+											@endcan
+
+											@can("reporte carga")
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('reporte-carga') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Reporte de carga</span>
+												</a>
+											</li>
+											@endcan
+
+											@can("reporte listado jefes")
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('listado-jefes') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Listado</span>
+												</a>
+											</li>
+											@endcan
+	
+										</ul>
+									</div>
+								</li>
+								@endcanany
+
+								<!-- Inicio instituciones -->
+								@canany(['instituciones',"instituciones listado"])
+								<li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+									<a href="javascript:;" class="menu-link menu-toggle">
+										<i class="menu-icon flaticon2-group text-white"></i>
+										<span class="menu-text text-white">Instituciones</span>
+										<i class="menu-arrow"></i>
+									</a>
+									<div class="menu-submenu">
+										<i class="menu-arrow"></i>
+										<ul class="menu-subnav">
+											<li class="menu-item menu-item-parent" aria-haspopup="true">
+												<span class="menu-link">
+													<span class="menu-text text-white">Actions</span>
+												</span>
+											</li>
+											@can('instituciones')
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('instituciones/trabajadores') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Asociar trabajador</span>
+												</a>
+											</li>
+											@endcan
+											@can('instituciones listado')
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('instituciones/listado') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Listado</span>
+												</a>
+											</li>
+											@endcan
+										</ul>
+									</div>
+								</li>
+								@endcanany
+								<!-- Fin instituciones -->
+
+								<!-- Inicio movimientos -->
+								@canany(['movimientos sociales','movimientos sociales listado'])
+								<li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+									<a href="javascript:;" class="menu-link menu-toggle">
+										<i class="menu-icon flaticon2-group text-white"></i>
+										<span class="menu-text text-white">Movimientos sociales</span>
+										<i class="menu-arrow"></i>
+									</a>
+									<div class="menu-submenu">
+										<i class="menu-arrow"></i>
+										<ul class="menu-subnav">
+											<li class="menu-item menu-item-parent" aria-haspopup="true">
+												<span class="menu-link">
+													<span class="menu-text text-white">Actions</span>
+												</span>
+											</li>
+											@can('movimientos sociales')
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('movimientos/trabajadores') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Asociar personal</span>
+												</a>
+											</li>
+											@endcan
+											@can('movimientos sociales listado')
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('movimientos/listado') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Listado</span>
+												</a>
+											</li>
+											@endcan
+										</ul>
+									</div>
+								</li>
+								@endcanany
+								<!-- Fin movimientos -->
+								
+								@can('votaciones cuadernillo')
+								<li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+									<a href="javascript:;" class="menu-link menu-toggle">
+										<i class="menu-icon flaticon2-group text-white"></i>
+										<span class="menu-text text-white">Votaciones</span>
+										<i class="menu-arrow"></i>
+									</a>
+									<div class="menu-submenu">
+										<i class="menu-arrow"></i>
+										<ul class="menu-subnav">
+											<li class="menu-item menu-item-parent" aria-haspopup="true">
+												<span class="menu-link">
+													<span class="menu-text text-white">Actions</span>
+												</span>
+											</li>
+
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ route('cuadernillo') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Cuadernillos</span>
+												</a>
+											</li>
+
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ route('votaciones.centro-votacion') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Centro de votación</span>
+												</a>
+											</li>
+
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ route('votaciones.gestionar-participacion') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Gestionar participación</span>
 												</a>
 											</li>
 	
 										</ul>
 									</div>
 								</li>
-
+								@endcan
 								
+								@can('metas ubch')
+								<li class="menu-item" aria-haspopup="true">
+									<a href="{{ url('/metas-ubch') }}" class="menu-link" style="color: #fff !important">
+										<i class="menu-icon flaticon2-group text-white" style="color: #fff !important"></i>
+										<span class="menu-text text-white">Metas UBCH</span>
+									</a>
+								</li>
+								@endcan
+
+								@can('sala tecnica')
+								<li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+									<a href="javascript:;" class="menu-link menu-toggle">
+										<i class="menu-icon flaticon2-group text-white"></i>
+										<span class="menu-text text-white">Sala técnica</span>
+										<i class="menu-arrow"></i>
+									</a>
+									<div class="menu-submenu">
+										<i class="menu-arrow"></i>
+										<ul class="menu-subnav">
+											<li class="menu-item menu-item-parent" aria-haspopup="true">
+												<span class="menu-link">
+													<span class="menu-text text-white">Actions</span>
+												</span>
+											</li>
+
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ route('asociar-personal') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Asociar personal</span>
+												</a>
+											</li>
+	
+										</ul>
+									</div>
+								</li>
+								@endcan
+
+								@can('cierre mesa')
+								<li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+									<a href="javascript:;" class="menu-link menu-toggle">
+										<i class="menu-icon flaticon2-group text-white"></i>
+										<span class="menu-text text-white">Cierre de mesa</span>
+										<i class="menu-arrow"></i>
+									</a>
+									<div class="menu-submenu">
+										<i class="menu-arrow"></i>
+										<ul class="menu-subnav">
+											<li class="menu-item menu-item-parent" aria-haspopup="true">
+												<span class="menu-link">
+													<span class="menu-text text-white">Actions</span>
+												</span>
+											</li>
+
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ route('cierre-mesa.candidatos') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Por candidatos</span>
+												</a>
+											</li>
+
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ route('cierre-mesa.partidos') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Por partidos</span>
+												</a>
+											</li>
+	
+										</ul>
+									</div>
+								</li>
+								@endcan
+							
+
+								@canany([
+									"comandos regional",
+									"comandos municipal",
+									"comandos parroquial",
+									"comandos enlace",
+								])
+								<li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+									<a href="javascript:;" class="menu-link menu-toggle">
+										<i class="menu-icon flaticon2-group text-white"></i>
+										<span class="menu-text text-white">Comandos</span>
+										<i class="menu-arrow"></i>
+									</a>
+									<div class="menu-submenu">
+										<i class="menu-arrow"></i>
+										<ul class="menu-subnav">
+											<li class="menu-item menu-item-parent" aria-haspopup="true">
+												<span class="menu-link">
+													<span class="menu-text text-white">Actions</span>
+												</span>
+											</li>
+											@can('comandos regional')
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('comandos/regionales') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Regional</span>
+												</a>
+											</li>
+											@endcan
+											@can('comandos municipal')
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('comandos/municipales') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Municipal</span>
+												</a>
+											</li>
+											@endcan
+											@can('comandos parroquial')
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('comandos/parroquiales') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Parroquial</span>
+												</a>
+											</li>
+											@endcan
+											@can('comandos enlace')
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('comandos/enlaces') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Enlace</span>
+												</a>
+											</li>
+											@endcan
+										</ul>
+									</div>
+								</li>
+								@endcanany
+								
+								@canany([
+									"estadistica cierre mesa candidatos",
+									"estadistica cierre mesa partidos",
+								])
+								<li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+									<a href="javascript:;" class="menu-link menu-toggle">
+										<i class="menu-icon flaticon2-group text-white"></i>
+										<span class="menu-text text-white">Estadística</span>
+										<i class="menu-arrow"></i>
+									</a>
+									<div class="menu-submenu">
+										<i class="menu-arrow"></i>
+										<ul class="menu-subnav">
+											<li class="menu-item menu-item-parent" aria-haspopup="true">
+												<span class="menu-link">
+													<span class="menu-text text-white">Actions</span>
+												</span>
+											</li>
+											@can('estadistica cierre mesa candidatos')
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('estadistica/cierre-mesa') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Cierre de mesa candidatos</span>
+												</a>
+											</li>
+											@endcan
+											@can('estadistica cierre mesa partidos')
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('estadistica/cierre-mesa-partidos') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Cierre de mesa partidos</span>
+												</a>
+											</li>
+											@endcan
+											
+										</ul>
+									</div>
+								</li>
+								@endcanany
 							</ul>
 							<!--end::Menu Nav -->
 						</div>

@@ -55,10 +55,9 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if ($exception instanceof AuthenticationException) {
-            return response()->json([
-            'message' => 'No estas autenticado en el sistema.'
-            ],403);
-        }elseif($exception instanceof AuthorizationException){
+            return redirect("/");
+        }else
+        if($exception instanceof AuthorizationException){
             $msg=$exception->getMessage() ?? "No estas autorizado para realizar esta petición.";
             $code=$exception->getCode() ?? 401;
             return response()->json([

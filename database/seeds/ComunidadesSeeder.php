@@ -23,7 +23,7 @@ class ComunidadesSeeder extends Seeder
 
         foreach($comunidades as $comunidad){
 
-            $this->store($comunidad);
+            //$this->store($comunidad);
 
         }
 

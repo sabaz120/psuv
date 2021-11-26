@@ -102,7 +102,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="jefeComunidad in jefesComunidad">
-                                        <td>@{{ jefeComunidad.jefe_ubch.personal_caracterizacion.centro_votacion.nombre }}</td>
+                                        <td>@{{ jefeComunidad.jefe_ubch.centro_votacion.nombre }}</td>
                                         <td>@{{ jefeComunidad.comunidad.nombre }}</td>
                                         <td>@{{ jefeComunidad.personal_caracterizacion.cedula }}</td>
                                         <td>@{{ jefeComunidad.personal_caracterizacion.primer_nombre }} @{{ jefeComunidad.personal_caracterizacion.primer_apellido }}</td>
@@ -300,7 +300,7 @@ const app = new Vue({
                 this.cedulaJefeSearching = true
                 //this.readonlyJefeCedula = true
 
-                let res = await axios.post("{{ url('raas/jefe-comunidad/search-jefe-ubch-by-cedula') }}", {cedulaJefe: this.cedulaJefeUBCH})
+                let res = await axios.post("{{ url('api/raas/jefe-comunidad/search-jefe-ubch-by-cedula') }}", {cedulaJefe: this.cedulaJefeUBCH, municipio_id: "{{ \Auth::user()->municipio_id }}"})
                 this.cedulaJefeSearching = false 
                 if(res.data.success == false){
                     this.readonlyJefeCedula = false
@@ -316,7 +316,7 @@ const app = new Vue({
                     this.nombreJefeUBCH = res.data.personal_caracterizacion.primer_nombre+" "+res.data.personal_caracterizacion.primer_apellido
                     this.selectedUBCH = res.data.id
                     this.selectedCentroVotacion = res.data.personal_caracterizacion.centro_votacion_id
-                    this.selectedParroquia = res.data.personal_caracterizacion.parroquia_id
+                    this.selectedParroquia = res.data.centro_votacion.parroquia_id
                     await this.getComunidades()
 
                 }
@@ -342,8 +342,9 @@ const app = new Vue({
             this.cedulaSearching = true
             this.readonlyCedula = true
 
-            let res = await axios.post("{{ url('raas/jefe-comunidad/search-by-cedula') }}", {
-                cedula: this.cedula
+            let res = await axios.post("{{ url('api/raas/jefe-comunidad/search-by-cedula') }}", {
+                cedula: this.cedula,
+                municipio_id: "{{ \Auth::user()->municipio_id }}"
             })
 
             if(res.data.success == false){
@@ -389,7 +390,7 @@ const app = new Vue({
         },  
         async fetch(link = ""){
 
-            let res = await axios.get(link == "" ? "{{ url('api/raas/jefe-comunidad/fetch') }}" : link.url)
+            let res = await axios.get(link == "" ? "{{ url('api/raas/jefe-comunidad/fetch') }}"+"?municipio_id="+"{{ \Auth::user()->municipio_id }}" : link.url+"{{ \Auth::user()->municipio_id }}")
             this.jefesComunidad = res.data.data
             this.links = res.data.links
             this.currentPage = res.data.current_page
@@ -568,7 +569,7 @@ const app = new Vue({
         async search(){
 
             this.searchLoading = true
-            let res = await axios.post("{{ url('/api/raas/jefe-comunidad/search') }}", {"cedula": this.cedulaSearch})
+            let res = await axios.get("{{ url('/api/raas/jefe-comunidad/search') }}"+"?cedula="+this.cedulaSearch+"&municipio_id="+ "{{ \Auth::user()->municipio_id }}")
             this.searchLoading = false
 
             this.jefesComunidad = res.data.data

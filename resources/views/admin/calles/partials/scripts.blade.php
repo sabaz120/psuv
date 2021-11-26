@@ -13,11 +13,12 @@
             //Form
             form:{
                 comunidad_id:"0",
-                tipo:"",
-                sector:"",
+                tipo:"---",
+                sector:"---",
                 nombre:"",
             },
             entityId:null,
+            searchText:"",
             //Array data
             comunidades:[],
             results:[],
@@ -32,17 +33,22 @@
         },
         created: function() {
             this.$nextTick(async function() {
-                this.loading = false;
                 await this.fetch();
                 await this.obtenerComunidades();
+                this.loading = false;
             });
         },
         methods: {
             async fetch(link = ""){
+                this.loading = true;
                 let filters={
-                    municipio_id:"{{Auth::user()->municipio_id ? : 0}}",
-                        includes:"comunidad"
+                    municipio_id:"{{Auth::user()->municipio_id ? Auth::user()->municipio_id : 0}}",
+                    includes:"comunidad",
+                    search:this.searchText
                 };
+                if(link==""){
+                    filters.page=1;
+                }
                 let res = await axios.get(link == "" ? "{{ route('api.calles.index') }}" : link.url,{
                     params:filters
                 })
@@ -50,6 +56,7 @@
                 this.links = res.data.links
                 this.currentPage = res.data.current_page
                 this.totalPages = res.data.last_page
+                this.loading = false;
             },
             async store(){
                 //Validations
@@ -213,16 +220,18 @@
             clearForm(){
                 this.form.comunidad_id="0";
                 this.form.nombre="";
-                this.form.sector="";
-                this.form.tipo="";
+                this.form.sector="---";
+                this.form.tipo="---";
                 this.action="create";
             },
             async obtenerComunidades() {
                 try {
                     this.loading = true;
                     let filters = {
-                        municipio_id:"{{Auth::user()->municipio_id ? : 0}}",
-                        includes:"comunidad"
+                        municipio_id:"{{Auth::user()->municipio_id ? Auth::user()->municipio_id : 0}}",
+                        includes:"comunidad",
+                        order_by:"nombre",
+                        order_direction:"ASC"
                      }
                     const response = await axios({
                         method: 'get',

@@ -17,8 +17,9 @@ class PartidoPoliticoSeeder extends Seeder
         
         $partidos = [
             "PSUV",
-            "Acción Democrática",
-            "Primero Justicia"
+            "NO APLICA"
+            //"Acción Democrática",
+            //"Primero Justicia"
         ];
 
         foreach($partidos as $partido){

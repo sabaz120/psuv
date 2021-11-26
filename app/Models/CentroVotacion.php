@@ -28,9 +28,40 @@ class CentroVotacion extends Model
 
     }
 
+    public function metasUbchs(){
+
+        return $this->hasMany(MetasUbch::class);
+
+    }
+
     public function parroquia(){
 
         return $this->belongsTo(Parroquia::class);
 
     }
+
+    public function descargaCuadernillo(){
+
+        return $this->hasMany(DescargaCuadernillo::class);
+
+    }
+
+    public function electores(){
+
+        return $this->hasMany(Elector::class);
+
+    }
+
+    public function votaciones(){
+
+        return $this->hasMany(Votacion::class);
+
+    }
+
+    public function mesas(){
+
+        return $this->hasMany(Mesa::class,"centro_votacion_id");
+
+    }
+
 }

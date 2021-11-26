@@ -89,7 +89,7 @@
             },  
             async fetch(link = ""){
 
-                let res = await axios.get(link == "" ? "{{ url('api/comunidad/fetch') }}" : link.url)
+                let res = await axios.get(link == "" ? "{{ url('api/comunidad/fetch') }}" + "?_token={{ csrf_token() }}" : link.url+"&_token={{ csrf_token() }}")
                 this.comunidades = res.data.data
                 this.links = res.data.links
                 this.currentPage = res.data.current_page
@@ -253,7 +253,8 @@
 
                 this.searchLoading = true
                 let res = await axios.get("{{ url('/api/comunidad/search') }}", {"params": {
-                    "search": this.nombreSearch
+                    "search": this.nombreSearch,
+                    "_token": "{{ csrf_token() }}"
                 }})
                 this.searchLoading = false
 

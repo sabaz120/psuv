@@ -72,7 +72,7 @@ trait ResponseTrait {
          if (!empty($query))
             $response['data'] = $page ? $query->items() : $query;
 
-        if($page) //If request pagination add meta-page
+        if($page){//If request pagination add meta-page
             $response['meta'] = [
                 'page' => [
                     "total" => $query->total(),
@@ -81,6 +81,13 @@ trait ResponseTrait {
                     "currentPage" => $query->currentPage()
                 ]
             ];
+            $response['current_page']=$query->currentPage();
+            $response['last_page']=$query->lastPage();
+            $response['per_page']=$query->perPage();
+            $response['total']=$query->total();
+            $response['links']=$query->links();
+        } 
+
         return $response;
     }
 

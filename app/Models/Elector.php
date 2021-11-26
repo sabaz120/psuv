@@ -45,4 +45,10 @@ class Elector extends Model
         return $this->belongsTo(CentroVotacion::class);
 
     }
+
+    public function electors(){
+
+        return $this->hasMany(Votacion::class);
+
+    }
 }

@@ -15,11 +15,11 @@ class EstadoSeeder extends Seeder
     public function run()
     {
 
-        if(Estado::where("nombre", "Falcón")->count() == 0){
+        /*if(Estado::where("nombre", "Falcón")->count() == 0){
             $estado = new Estado;
             $estado->nombre = "Falcón";
             $estado->save();
-        }
+        }*
 
     }
 }

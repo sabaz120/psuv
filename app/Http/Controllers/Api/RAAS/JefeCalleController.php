@@ -18,6 +18,7 @@ class JefeCalleController extends Controller
     public function index( Request $request)
     {
         try {
+            $search = $request->input('search');
             $calle_id = $request->input('calle_id');
             $personal_caracterizacion_id = $request->input('personal_caracterizacion_id');
             $jefe_comunidad_id = $request->input('jefe_comunidad_id');
@@ -42,6 +43,15 @@ class JefeCalleController extends Controller
             }
             if ($jefe_comunidad_id) {
                 $query->where('jefe_comunidad_id', $jefe_comunidad_id);
+            }
+            if ($search) {
+                $query->whereHas('personalCaracterizacion',function($query) use($search){
+                    $query->where("cedula","LIKE","%{$search}%")
+                    ->orWhere("primer_nombre","LIKE","%{$search}%")
+                    ->orWhere("primer_apellido","LIKE","%{$search}%")
+                    ->orWhere("segundo_nombre","LIKE","%{$search}%")
+                    ->orWhere("segundo_apellido","LIKE","%{$search}%");
+                });
             }
             // $this->addFilters($request, $query);
             
@@ -99,10 +109,16 @@ class JefeCalleController extends Controller
             }else{
                 $data['personal_caraterizacion_id']=$elector->id;
             }
+            //
             $exist=Model::where('personal_caraterizacion_id',$elector->id)
             ->where("calle_id",$data['calle_id'])->first();
             if($exist){
                 throw new \Exception('Este elector ya ha sido registrado como jefe de esta calle.', 404);
+            }
+            //Cada calle solo puede tener un jefe de calle
+            $exist=Model::where("calle_id",$data['calle_id'])->first();
+            if($exist){
+                throw new \Exception('Esta calle, ya posee un jefe de calle: '.$exist->personalCaracterizacion->full_name, 404);
             }
             //Create entity
             $entity=Model::create($data);
@@ -261,7 +277,7 @@ class JefeCalleController extends Controller
             //Init query
             $query=Model::query();
             //includes
-            $query->with('personalCaracterizacion',"calle");
+            $query->with('personalCaracterizacion',"calle","calles.calle");
             if ($cedula) {
                 $query->whereHas('personalCaracterizacion', function($q) use($cedula){
                     $q->where('cedula', $cedula);
