@@ -18,7 +18,7 @@
                 telefono_principal:"",
                 telefono_secundario:"",
                 partido_politico_id:4,
-                movilizacion_id:3,
+                movilizacion_id:2,
                 comision_trabajo_id:"",
                 responsabilidad_comando_id:"",
                 municipio_id:"",
@@ -258,7 +258,7 @@
                 this.form.telefono_principal="";
                 this.form.telefono_secundario="";
                 this.form.partido_politico_id=4;
-                this.form.movilizacion_id=3;
+                this.form.movilizacion_id=2;
                 this.cedula_trabajador="";
                 this.cedula_trabajador_error="";
                 this.entityId=null;
@@ -305,7 +305,7 @@
                         if(response.data.elector.movilizacion_id){
                             this.form.movilizacion_id=response.data.elector.movilizacion_id;
                         }else{
-                            this.form.movilizacion_id=3;
+                            this.form.movilizacion_id=2;
                         }
                         this.form.telefono_principal=response.data.elector.telefono_principal;
                         this.form.telefono_secundario=response.data.elector.telefono_secundario;
