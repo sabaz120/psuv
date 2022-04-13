@@ -30,9 +30,9 @@ class PersonalPuntoRojoController extends Controller
                 $query->whereDate('created_at', '<=', $end_date);
             }
             if ($search) {
-                $query->where("nombre", "LIKE", "%".$search."%")
-                ->orWhere("apellido", "LIKE", "%".$search."%")
-                ->orWhere("cedula", "LIKE", "%".$search."%");
+                $query->where("nombre", "ilike", "%".$search."%")
+                ->orWhere("apellido", "ilike", "%".$search."%")
+                ->orWhere("cedula", "ilike", "%".$search."%");
             }
             if ($centro_votacion_id) {
                 $query->where("centro_votacion_id", $centro_votacion_id);

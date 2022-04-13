@@ -29,8 +29,8 @@ class PersonalEnlaceTerritorialController extends Controller
             //Filters
             if ($search) {
                 $query->whereHas('personalCaracterizacion',function($query) use($search){
-                    $query->where("primer_nombre","LIKE","%{$search}%")
-                    ->orWhere("primer_apellido","LIKE","%{$search}%");
+                    $query->where("primer_nombre","ilike","%{$search}%")
+                    ->orWhere("primer_apellido","ilike","%{$search}%");
                 });
             }
             

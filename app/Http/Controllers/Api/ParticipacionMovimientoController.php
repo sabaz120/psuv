@@ -30,7 +30,7 @@ class ParticipacionMovimientoController extends Controller
             //Filters
             if ($search) {
                 $query->whereHas('personalCaracterizacion',function($query) use($search){
-                    $query->where("cedula","LIKE","%{$search}%");
+                    $query->where("cedula","ilike","%{$search}%");
                 });
             }
             if($count_familiares){
