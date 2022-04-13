@@ -26,7 +26,7 @@ class PermissionController extends Controller
             //Includes
             $query->with($includes);
             if ($search) {
-                $query->where("name", "LIKE", "%".$search."%");
+                $query->where("name", "ilike", "%".$search."%");
             }
 
             $this->addFilters($request, $query);
