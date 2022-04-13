@@ -29,10 +29,10 @@ class PersonalComandoMunicipalController extends Controller
             //Filters
             if ($search) {
                 $query->whereHas('comisionTrabajo',function($query) use($search){
-                    $query->where("nombre_comision","ilike","%{$search}%");
+                    $query->where("nombre_comision","ilike","%$search%");
                 });
                 $query->whereHas('personalCaracterizacion',function($query) use($search){
-                    $query->where("cedula","ilike","%{$search}%");
+                    $query->where("cedula","ilike","%$search%");
                 });
             }
             
