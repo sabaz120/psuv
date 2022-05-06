@@ -304,4 +304,91 @@ class JefeCalleController extends Controller
         return $this->response($response, $code ?? 200);
     }//searchByCedulaField()
 
+    public function importacionJefeCalle(Request $request){
+        $jefeCalles = \Maatwebsite\Excel\Facades\Excel::toArray(new \App\Imports\BaseImport, $request->file('file'));
+        $data['datos'] = $jefeCalles[0];
+        $validation = \Validator::make($data, [
+            "datos.*.nombre_comunidad" => 'required|string',
+            "datos.*.nombre_calle" => "required|string",
+            "datos.*.cedula_jefe_comunidad" => "required|numeric",
+            "datos.*.cedula_persona" => 'required|numeric',
+       ]);
+
+       if ($validation->fails()) {
+            return response()->json([
+                "message"=>'Algunos datos en el excel no son validos',
+                "errors"=>$validation->errors()
+            ],400);
+       }
+       $response=[
+           "importados"=>0,
+           "errores"=>[]
+       ];
+       $data['datos']=json_decode(json_encode($data['datos']));
+       foreach($data["datos"] as $jefe){
+            $comunidad=\App\Models\Comunidad::where("nombre",$jefe->nombre_comunidad)->first();
+            if(!$comunidad){
+                $response["errores"][]=[
+                    "datos"=>$jefe,
+                    "motivo"=>"La comunidad: ".$jefe->nombre_comunidad." no existe"
+                ];
+                break;
+            }
+            $calle=\App\Models\Calle::where("nombre",$jefe->nombre_calle)
+            ->where("comunidad_id",$comunidad->id)
+            ->first();
+            if(!$calle){
+                $response["errores"][]=[
+                    "datos"=>$jefe,
+                    "motivo"=>"La calle: ".$jefe->nombre_calle." no existe"
+                ];
+                break;
+            }
+            $jefeComunidad=\App\Models\JefeComunidad::whereHas("personalCaracterizacion",function($query)use($jefe){
+                $query->where("cedula",$jefe->cedula_jefe_comunidad);
+            })
+            ->where("comunidad_id",$comunidad->id)
+            ->first();
+            if(!$jefeComunidad){
+                $response["errores"][]=[
+                    "datos"=>$jefe,
+                    "motivo"=>"El jefe de comunidad con la cédula: ".$jefe->cedula_jefe_comunidad." no existe"
+                ];
+                break;
+            }
+            $jefeCalle=\App\Models\JefeComunidad::whereHas("personalCaracterizacion",function($query)use($jefe){
+                $query->where("cedula",$jefe->cedula_persona);
+            })
+            ->first();
+            if(!$jefeCalle){
+                $response["errores"][]=[
+                    "datos"=>$jefe,
+                    "motivo"=>"No existe personal registrado con esta cédula: ".$jefe->cedula_persona
+                ];
+                break;
+            }
+            $dataJefe=\App\Models\JefeCalle::where("calle_id",$calle->id)
+            ->where("personal_caraterizacion_id",$jefeCalle->id)
+            ->where("jefe_comunidad_id",$jefeComunidad->id)
+            ->first();
+            if($dataJefe){
+                $response["errores"][]=[
+                    "datos"=>$jefe,
+                    "motivo"=>"Ya este jefe de calle se encuentra registrado para esta calle: ".$calle->nombre
+                ];
+                break;
+            }
+            $dataJefe=\App\Models\JefeCalle::create([
+                "personal_caraterizacion_id"=>$jefeCalle->id,
+                "calle_id"=>$calle->id,
+                "jefe_comunidad_id"=>$jefeComunidad->id,
+            ]);
+            $response["importados"]=$response["importados"]+1;
+        }//jefes foreach
+        return response()->json([
+            "data"=>$response,
+            "message"=>"Jefes de calle importados exitosamente: ".$response["importados"]
+        ],200);
+    }
+
 }
