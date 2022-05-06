@@ -329,5 +329,6 @@ Route::post("/cierre-mesa/candidato/store-results", [CierreCandidatoController::
 Route::post("/cierre-mesa/partido/store-results", [CierreCandidatoController::class, "storePartidoResults"]);
 Route::get("/cierre-mesa/partido/get-resultadods/{mesa_id}", [CierreCandidatoController::class, "getResultadosPartido"]);
 
-
 Route::post("/reporte-dashboard/generate", [DashboardController::class, "generate"]);
+
+Route::post("/importacion/jefe_calle", [JefeCalleController::class, "importacionJefeCalle"]);
