@@ -50,10 +50,16 @@ class UBCHController extends Controller
             if($personalCaracterizacion == null){
                 $personalCaracterizacion = $this->storePersonalCaracterizacion($request);
             }
+
+            $rolEquipoPolitico=\App\Models\RolesEquipoPolitico::find($request->rol_equipo_politico_id);
+            if(!$rolEquipoPolitico->rolNivelTerritorial){
+                return response()->json(["success" => false, "msg" => "El rol seleccionado no posee un nivel territorial configurado"]);
+            }
         
             $jefeUbch = new JefeUbch;
             $jefeUbch->personal_caracterizacion_id = $personalCaracterizacion->id;
             $jefeUbch->centro_votacion_id = $request->centro_votacion_id;
+            $jefeUbch->roles_nivel_territorial_id=$rolEquipoPolitico->rolNivelTerritorial->id;
             $jefeUbch->save();
 
             $this->updatePersonalCaracterizacion($jefeUbch->personal_caracterizacion_id, $request);
@@ -65,7 +71,6 @@ class UBCHController extends Controller
 
         }
         
-
     }
 
     function verificarDuplicidadCedula($cedula){
@@ -118,11 +123,16 @@ class UBCHController extends Controller
             if($personalCaracterizacion == null){
                 $personalCaracterizacion = $this->storePersonalCaracterizacion($request);
             }
-            
+    
+            $rolEquipoPolitico=\App\Models\RolesEquipoPolitico::find($request->rol_equipo_politico_id);
+            if(!$rolEquipoPolitico->rolNivelTerritorial){
+                return response()->json(["success" => false, "msg" => "El rol seleccionado no posee un nivel territorial configurado"]);
+            }
+
             $jefeUbch->personal_caracterizacion_id = $personalCaracterizacion->id;
             $personalCaracterizacion = $this->updatePersonalCaracterizacion($jefeUbch->personal_caracterizacion_id, $request);
+            $jefeUbch->roles_nivel_territorial_id=$rolEquipoPolitico->rolNivelTerritorial->id;
             $jefeUbch->update();
-
 
             return response()->json(["success" => true, "msg" => "Jefe de UBCH actualizado"]);
 
@@ -169,7 +179,17 @@ class UBCHController extends Controller
 
     function fetch(Request $request){
 
-        $query = JefeUbch::with("centroVotacion", "centroVotacion.parroquia", "personalCaracterizacion", "personalCaracterizacion.municipio", "personalCaracterizacion.parroquia", "personalCaracterizacion.centroVotacion", "personalCaracterizacion.partidoPolitico", "personalCaracterizacion.movilizacion");
+        $query = JefeUbch::with(
+            "centroVotacion", 
+            "centroVotacion.parroquia", 
+            "personalCaracterizacion", 
+            "personalCaracterizacion.municipio", 
+            "personalCaracterizacion.parroquia", 
+            "personalCaracterizacion.centroVotacion", 
+            "personalCaracterizacion.partidoPolitico", 
+            "personalCaracterizacion.movilizacion",
+            "RolesNivelTerritorial.RolesEquipoPolitico"
+        );
 
         if(\Auth::user()->municipio_id != null){
             $municipio_id = \Auth::user()->municipio_id;
@@ -179,15 +199,24 @@ class UBCHController extends Controller
         }
         
         $jefeUbch = $query->orderBy("id", "desc")->paginate(15);
-        
         return response()->json($jefeUbch);
-
+        
     }
 
     function search(Request $request){
 
         $cedula = $request->search;
-        $query = JefeUbch::with("centroVotacion", "centroVotacion.parroquia", "personalCaracterizacion", "personalCaracterizacion.municipio", "personalCaracterizacion.parroquia", "personalCaracterizacion.centroVotacion", "personalCaracterizacion.partidoPolitico", "personalCaracterizacion.movilizacion");
+        $query = JefeUbch::with(
+            "centroVotacion", 
+            "centroVotacion.parroquia", 
+            "personalCaracterizacion", 
+            "personalCaracterizacion.municipio", 
+            "personalCaracterizacion.parroquia", 
+            "personalCaracterizacion.centroVotacion", 
+            "personalCaracterizacion.partidoPolitico", 
+            "personalCaracterizacion.movilizacion",
+            "RolesNivelTerritorial.RolesEquipoPolitico"
+        );
         
 
         if(\Auth::user()->municipio_id != null){
@@ -196,10 +225,12 @@ class UBCHController extends Controller
                 $q->where('municipio_id', $municipio_id);
             });
         }
-        
-        $jefeUbch = $query->whereHas('personalCaracterizacion', function($q) use($cedula){
-            $q->where('cedula', $cedula);
-        })->orderBy("id", "desc")->paginate(15);
+        if($cedula){
+            $query->whereHas('personalCaracterizacion', function($q) use($cedula){
+                $q->where('cedula', $cedula);
+            });
+        }
+        $jefeUbch = $query->orderBy("id", "desc")->paginate(15);
 
         return response()->json($jefeUbch);
 

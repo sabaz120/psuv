@@ -13,6 +13,7 @@ class JefeCalle extends Model
         "calle_id",
         "personal_caraterizacion_id",
         "jefe_comunidad_id",
+        "roles_nivel_territorial_id"
     ];
     public function calle(){
         return $this->belongsTo(Calle::class);

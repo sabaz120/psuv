@@ -40,6 +40,17 @@
 
                         <div class="col-md-4">
                             <div class="form-group">
+                                <label for="estado">Estado</label>
+                                <select class="form-control" v-model="selectedEstado" id="estado" @change="getMunicipios()" :disabled="readonlyEstado">
+                                    <option value="">Seleccione</option>
+                                    <option :value="estado.id" v-for="estado in estados">@{{ estado.nombre }}</option>
+                                </select>
+                                <small class="text-danger" v-if="errors.hasOwnProperty('estado')">@{{ errors['estado'][0] }}</small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
                                 <label for="municipio">Municipio</label>
                                 <select class="form-control" v-model="selectedMunicipio" id="municipio" @change="getParroquias()" :disabled="readonlyMunicipio">
                                     <option value="">Seleccione</option>
@@ -48,6 +59,7 @@
                                 <small class="text-danger" v-if="errors.hasOwnProperty('municipio')">@{{ errors['municipio'][0] }}</small>
                             </div>
                         </div>
+
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="parroquia">Parroquia</label>
@@ -70,9 +82,18 @@
                             </div>
                         </div>
 
-                        
-
                         <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="Rol">Rol</label>
+                                <select class="form-control" v-model="selectedRolEquipoPolitico" :disabled="readonlyRolEquipoPolitico">
+                                    <option value="">Seleccione</option>
+                                    <option :value="rol.id" v-for="rol in rolesEquipoPoliticos">@{{ rol.nombre_rol }}</option>
+                                </select>
+                                <small  class="text-danger" v-if="errors.hasOwnProperty('rol_equipo_politico_id')">@{{ errors['rol_equipo_politico_id'][0] }}</small>
+                            </div>
+                        </div> 
+
+                        <!-- <div class="col-md-4">
                             <div class="form-group">
                                 <label for="tipoVoto">Tipo de voto</label>
                                 <select class="form-control" v-model="tipoVoto">
@@ -82,7 +103,7 @@
                                 </select>
                                 <small  class="text-danger" v-if="errors.hasOwnProperty('tipo_voto')">@{{ errors['tipo_voto'][0] }}</small>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="col-md-4">
                             <div class="form-group">
@@ -100,7 +121,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <!-- <div class="col-md-4">
                             <div class="form-group">
                                 <label for="partidoPolitico">Partido político</label>
                                 <select class="form-control" v-model="selectedPartidoPolitico" id="partidoPolitico">
@@ -109,7 +130,7 @@
                                 </select>
                                 <small  class="text-danger" v-if="errors.hasOwnProperty('partido_politico_id')">@{{ errors['partido_politico_id'][0] }}</small>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="col-md-4">
                             <div class="form-group">

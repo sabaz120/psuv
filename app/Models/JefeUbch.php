@@ -30,4 +30,10 @@ class JefeUbch extends Model
 
     }
 
+    public function RolesNivelTerritorial(){
+
+        return $this->belongsTo(RolesNivelTerritorial::class,"roles_nivel_territorial_id");
+
+    }
+
 }

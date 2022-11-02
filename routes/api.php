@@ -2,13 +2,12 @@
 
 use App\Http\Controllers\Api\Auth\{AuthenticationController, PasswordResetController};
 use App\Http\Controllers\Api\{
-    RoleController, 
+    EstadoController,
     MunicipioController, 
     ParroquiaController, 
     CentroVotacionController, 
     PartidoPoliticoController, 
     MovilizacionController, 
-    ElectorController, 
     ComunidadController,
     PersonalCaracterizacionController,
     CargoController,
@@ -25,6 +24,7 @@ use App\Http\Controllers\Api\{
     MesaController,
     TestigoMesaController,
     PersonalPuntoRojoController,
+    RolEquipoPoliticoController
 };
 
 use App\Http\Controllers\{
@@ -170,6 +170,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 });
 
 
+Route::get("estados", [EstadoController::class, "all"]);
 Route::get("municipios", [MunicipioController::class, "all"]);
 
 Route::get("parroquias/{municipio_id}", [ParroquiaController::class, "parroquiasByMunicipio"]);
@@ -332,3 +333,5 @@ Route::get("/cierre-mesa/partido/get-resultadods/{mesa_id}", [CierreCandidatoCon
 Route::post("/reporte-dashboard/generate", [DashboardController::class, "generate"]);
 
 Route::post("/importacion/jefe_calle", [JefeCalleController::class, "importacionJefeCalle"]);
+
+Route::get("rol-equipo-politicos", [RolEquipoPoliticoController::class, "index"])->name('api.rol.equipo.politico.index');
