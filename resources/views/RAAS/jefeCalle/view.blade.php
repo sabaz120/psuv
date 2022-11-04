@@ -64,11 +64,19 @@
                                     <tr>
 
                                         <th class="datatable-cell datatable-cell-sort">
+                                            <span>Municipio</span>
+                                        </th>
+
+                                        <th class="datatable-cell datatable-cell-sort">
                                             <span>Comunidad</span>
                                         </th>
 
                                         <th class="datatable-cell datatable-cell-sort">
                                             <span>Calle</span>
+                                        </th>
+
+                                        <th class="datatable-cell datatable-cell-sort">
+                                            <span>Rol</span>
                                         </th>
 
                                         <th class="datatable-cell datatable-cell-sort">
@@ -84,32 +92,19 @@
                                         </th>
 
                                         <th class="datatable-cell datatable-cell-sort">
-                                            <span>Tipo voto</span>
-                                        </th>
-
-                                        <th class="datatable-cell datatable-cell-sort">
-                                            <span>Partido</span>
-                                        </th>
-
-                                        <th class="datatable-cell datatable-cell-sort">
-                                            <span>Movilización</span>
-                                        </th>
-
-                                        <th class="datatable-cell datatable-cell-sort">
                                             <span>Acción</span>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="result in results">
-                                        <td>@{{ result.jefe_comunidad.comunidad.nombre }}</td>
+                                        <td>@{{ result.calle.comunidad.parroquia.municipio.nombre }}</td>
+                                        <td>@{{ result.calle.comunidad.nombre }}</td>
                                         <td>@{{ result.calle.nombre }}</td>
+                                        <td>@{{ result.roles_nivel_territorial.roles_equipo_politico.nombre_rol }}</td>
                                         <td>@{{ result.personal_caracterizacion.cedula }}</td>
                                         <td>@{{ result.personal_caracterizacion.full_name }}</td>
                                         <td>@{{ result.personal_caracterizacion.telefono_principal }}</td>
-                                        <td>@{{ result.personal_caracterizacion.tipo_voto }}</td>
-                                        <td>@{{ result.personal_caracterizacion.partido_politico.nombre }}</td>
-                                        <td>@{{ result.personal_caracterizacion.movilizacion.nombre }}</td>
                                         <td>
                                             <button class="btn btn-success" data-toggle="modal" data-target=".marketModal" @click="edit(result)">
                                                 <i class="far fa-edit"></i>

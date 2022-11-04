@@ -27,8 +27,10 @@ class JefeCalle extends Model
     public function jefeFamilias(){
         return $this->hasMany(JefeFamilia::class,"jefe_calle_id");
     }
-
     public function calles(){
         return $this->hasMany(JefeCalle::class,"personal_caraterizacion_id","personal_caraterizacion_id");
+    }
+    public function RolesNivelTerritorial(){
+        return $this->belongsTo(RolesNivelTerritorial::class,"roles_nivel_territorial_id");
     }
 }

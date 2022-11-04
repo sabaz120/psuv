@@ -28,7 +28,7 @@ class JefeCalleController extends Controller
                 "jefeComunidad.personalCaracterizacion",
                 "jefeComunidad.comunidad",
                 "jefeComunidad.comunidades",
-                "calle"
+                "calle.comunidad.parroquia.municipio"
             ];
             //Init query
             $query=Model::query();
@@ -277,7 +277,11 @@ class JefeCalleController extends Controller
             //Init query
             $query=Model::query();
             //includes
-            $query->with('personalCaracterizacion',"calle","calles.calle");
+            $query->with(
+                'personalCaracterizacion',
+                "calle",
+                "calles.calle"
+            );
             if ($cedula) {
                 $query->whereHas('personalCaracterizacion', function($q) use($cedula){
                     $q->where('cedula', $cedula);

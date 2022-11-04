@@ -25,7 +25,7 @@ class UBCHStoreRequest extends FormRequest
     {
         return [
             "centro_votacion_id" => "required|exists:centro_votacion,id",
-            "cedula" => "required|exists:elector,cedula",
+            "cedula" => "required",
             "tipo_voto" => "required",
             "telefono_principal" => "nullable|max:11",
             "telefono_secundario" => "nullable|max:11",

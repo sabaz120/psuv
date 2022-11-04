@@ -190,7 +190,9 @@ return [
       "institutions_ids"=>"instituciones",
       "courier_type_id"=>"tipo de envios",
       "holder_dni" => "cedula",
-      "payment_method_id"=>"Método de pago"
+      "payment_method_id"=>"Método de pago",
+      "rol_equipo_politico_id"=>"rol equipo político",
+      "movilizacion_id"=>"movilización"
     ],
 
 ];

@@ -8,6 +8,20 @@ use App\Models\Parroquia;
 
 class ParroquiaController extends Controller
 {
+    function index(Request $request){
+        $municipio_id=$request->input("municipio_id");
+        $query=Parroquia::query();
+        if($municipio_id){
+            $query->where("municipio_id",$municipio_id);
+        }
+        $query->orderBy("nombre");
+        $query=$query->get();
+        return response()->json(
+            $query,
+            200
+        );
+    }
+
     function parroquiasByMunicipio($municipio_id){
 
         return response()->json(Parroquia::where("municipio_id", $municipio_id)->orderBy("nombre")->get());

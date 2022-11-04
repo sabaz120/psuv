@@ -14,33 +14,6 @@
 
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="cedula">Cédula Jefe de Comunidad</label>
-                                <div class="d-flex">
-                                    <div>
-                                        <input type="tel" class="form-control" id="cedula" v-model="cedula_jefe_comunidad" :readonly="entityId" maxlength="8" @keypress="isNumber($event)">
-                                        <small class="text-danger" v-if="cedula_jefe_comunidad_error">@{{ cedula_jefe_comunidad_error }}</small>
-                                    </div>
-                                    <div >
-                                        <button class="btn btn-primary" @click="obtenerJefeComunidad()" v-if="!loading"  :disabled="entityId">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                        <div class="spinner spinner-primary ml-1 mr-13 mt-5" v-if="loading"></div>
-                                    </div>      
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-8">
-                            <div class="form-group">
-                                <label for="nombre">Nombre Jefe Comunidad</label>
-                                <input type="text" class="form-control" v-if="jefe_comunidad" v-model="jefe_comunidad.personal_caracterizacion.full_name" readonly>
-                                <input type="text" class="form-control" v-else readonly>
-                            </div>
-                        </div>
-
-
-                        <div class="col-md-4">
-                            <div class="form-group">
                                 <label for="cedula">Cédula Jefe</label>
                                 <div class="d-flex">
                                     <div>
@@ -67,10 +40,20 @@
 
                         <div class="col-md-4">
                             <div class="form-group">
+                                <label for="calle">Parroquia</label>
+                                <select class="form-control" v-model="form.parroquia_id" @change="getComunidades();" :disabled="entityId">
+                                    <option value="0">Seleccione</option>
+                                    <option :value="parroquia.id" v-for="parroquia in parroquias">@{{ parroquia.nombre }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
                                 <label for="calle">Comunidad</label>
                                 <select class="form-control" v-model="form.comunidad_id" v-if="comunidades.length>0" @change="obtenerCalles()" :disabled="entityId">
                                     <option value="0">Seleccione</option>
-                                    <option :value="comunidadJefe.comunidad.id" v-for="comunidadJefe in comunidades">@{{ comunidadJefe.comunidad.nombre }}</option>
+                                    <option :value="comunidad.id" v-for="comunidad in comunidades">@{{ comunidad.nombre }}</option>
                                 </select>
                                 <select class="form-control" v-else disabled>
                                     <option value="" selected>Seleccione</option>
@@ -81,22 +64,9 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="calle">Calle</label>
-                                <select class="form-control" v-model="form.calle_id" v-if="calles.length>0"  :disabled="entityId">
+                                <select class="form-control" v-model="form.calle_id" v-if="calles.length>0" :disabled="entityId">
                                     <option value="0">Seleccione</option>
                                     <option :value="calle.id" v-for="calle in calles">@{{ calle.nombre }}</option>
-                                </select>
-                                <select class="form-control" v-else disabled>
-                                    <option value="" selected>Seleccione</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="tipoVoto">Tipo de voto</label>
-                                <select class="form-control" v-model="form.tipo_voto" v-if="form.personal_caraterizacion">
-                                    <option value="" selected>Seleccione</option>
-                                    <option v-for="tipoVoto in tipoDeVotos" :value="tipoVoto.toLowerCase()">@{{tipoVoto}}</option>
                                 </select>
                                 <select class="form-control" v-else disabled>
                                     <option value="" selected>Seleccione</option>
@@ -120,32 +90,6 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="partidoPolitico">Partido político</label>
-                                <select class="form-control" v-model="form.partido_politico_id" v-if="form.personal_caraterizacion" >
-                                    <option value="" selected>Seleccione</option>
-                                    <option :value="partidoPolitico.id" v-for="partidoPolitico in partidosPoliticos">@{{ partidoPolitico.nombre }}</option>
-                                </select>
-                                <select class="form-control" v-else disabled>
-                                    <option value="" selected>Seleccione</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="movilizacion">Tipo de movilización</label>
-                                <select class="form-control" v-model="form.movilizacion_id" v-if="form.personal_caraterizacion">
-                                    <option value="" selected>Seleccione</option>
-                                    <option :value="movilizacion.id" v-for="movilizacion in tiposDeMovilizacion">@{{ movilizacion.nombre }}</option>
-                                </select>
-                                <select class="form-control" v-else disabled>
-                                    <option value="" selected>Seleccione</option>
-                                </select>
-                            </div>
-                        </div>
-                
                     </div>
                 </div>                    
             </div>
