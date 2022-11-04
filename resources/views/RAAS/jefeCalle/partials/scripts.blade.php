@@ -16,11 +16,12 @@
                 comunidad_id:"0",
                 calle_id:"0",
                 personal_caraterizacion:null,
-                tipo_voto:"",
+                tipo_voto:"Duro",
                 telefono_principal:"",
                 telefono_secundario:"",
                 partido_politico_id:"",
                 movilizacion_id:"",
+                parroquia_id:"0"
             },
             entityId:null,
             //search
@@ -31,8 +32,10 @@
             cedula_jefe_error:"",
             searchText:"",
             //Array data
+            parroquias:[],
             comunidades:[],
             calles:[],
+            rolesEquipoPoliticos:[],
             tipoDeVotos:[
                 "Duro",
                 "Blando",
@@ -42,12 +45,13 @@
             tiposDeMovilizacion:[],
             results:[],
 
-
             //paginate
             modalTitle:"Crear Jefe de Calle",
             currentPage:1,
             links:"",
             totalPages:"",
+            //auth
+            authMunicipioId:"{{Auth::user()->municipio ? Auth::user()->municipio->id : ''}}",
    
         },
         created: function() {
@@ -56,9 +60,30 @@
                 await this.fetch();
                 await this.obtenerPartidosPoliticos();
                 await this.obtenerTiposMovilizacion();
+                await this.getParroquias();
             });
         },
         methods: {
+            async getParroquias(){
+                this.loading=true;
+                let res = await axios.get("{{ url('/api/parroquias') }}",{
+                    municipio_id:this.authMunicipioId
+                })
+                this.parroquias = res.data
+                this.loading=false;
+            },
+            async getRolesEquiposPoliticos(){
+                this.loading=true;
+                let res = await axios.get("{{ url('/api/rol-equipo-politicos') }}")
+                this.rolesEquipoPoliticos = res.data
+                this.loading=false;
+            },
+            async getComunidades(){
+                this.loading=true;
+                let res = await axios.get("{{ url('/api/comunidades') }}"+"/"+this.form.parroquia_id)
+                this.comunidades = res.data
+                this.loading=false;
+            },
             async fetch(link = ""){
                 let filters={
                     params:{
@@ -405,13 +430,6 @@
                         order_by:"nombre",
                         order_direction:"ASC"
                     }
-                    for(let i=0;i<this.comunidades.length;i++){
-                        console.log(this.comunidades[i]);
-                        if(this.comunidades[i].comunidad.id==this.form.comunidad_id){
-                            this.form.jefe_comunidad_id=this.comunidades[i].id;
-                            break;
-                        }
-                    }//for
                     const response = await axios({
                         method: 'Get',
                         responseType: 'json',
@@ -423,7 +441,7 @@
                     this.calles = response.data;
                     if(this.calles.length==0){
                         swal({
-                            text:"La comunidad de este jefe de calle, no posee calles.",
+                            text:"La comunidad seleccionada, no posee calles.",
                             icon:"error"
                         });
                         this.calles=[];

@@ -83,14 +83,14 @@ class JefeComunidadController extends Controller
                 $personalCaracterizacion = $this->storePersonalCaracterizacion($request);
             }
         
+            $rolEquipoPolitico=\App\Models\RolesEquipoPolitico::find($request->rol_equipo_politico_id);
+            if(!$rolEquipoPolitico->rolNivelTerritorial){
+                return response()->json(["success" => false, "msg" => "El rol seleccionado no posee un nivel territorial configurado"]);
+            }
             $jefeComunidad = new JefeComunidad;
             $jefeComunidad->personal_caracterizacion_id = $personalCaracterizacion->id;
             $jefeComunidad->comunidad_id = $request->comunidad;
-
-            $cedula = $request->cedulaJefe;
-            $jefeComunidad->jefe_ubch_id = JefeUbch::whereHas('personalCaracterizacion', function($q) use($cedula){
-                $q->where('cedula', $cedula);
-            })->first()->id;
+            $jefeComunidad->roles_nivel_territorial_id=$rolEquipoPolitico->rolNivelTerritorial->id;
             $jefeComunidad->save();
 
             $this->updatePersonalCaracterizacion($jefeComunidad->personal_caracterizacion_id, $request);
@@ -157,8 +157,13 @@ class JefeComunidadController extends Controller
             if($personalCaracterizacion == null){
                 $personalCaracterizacion = $this->storePersonalCaracterizacion($request);
             }
-
+        
+            $rolEquipoPolitico=\App\Models\RolesEquipoPolitico::find($request->rol_equipo_politico_id);
+            if(!$rolEquipoPolitico->rolNivelTerritorial){
+                return response()->json(["success" => false, "msg" => "El rol seleccionado no posee un nivel territorial configurado"]);
+            }
             $jefeComunidad->personal_caracterizacion_id = $personalCaracterizacion->id;
+            $jefeComunidad->roles_nivel_territorial_id=$rolEquipoPolitico->rolNivelTerritorial->id;
             $jefeComunidad->update();
        
             $personalCaracterizacion = $this->updatePersonalCaracterizacion($jefeComunidad->personal_caracterizacion_id, $request);
@@ -202,7 +207,19 @@ class JefeComunidadController extends Controller
 
     function fetch(Request $request){
 
-        $query = JefeComunidad::with("personalCaracterizacion", "personalCaracterizacion.municipio", "personalCaracterizacion.parroquia", "personalCaracterizacion.centroVotacion", "personalCaracterizacion.partidoPolitico", "personalCaracterizacion.movilizacion", "comunidad", "jefeUbch", "jefeUbch.personalCaracterizacion", "jefeUbch.personalCaracterizacion.centroVotacion", "jefeUbch.centroVotacion");
+        $query = JefeComunidad::with(
+            "personalCaracterizacion", 
+            "personalCaracterizacion.municipio", 
+            "personalCaracterizacion.parroquia", 
+            "personalCaracterizacion.centroVotacion", 
+            "personalCaracterizacion.partidoPolitico", 
+            "personalCaracterizacion.movilizacion", 
+            "comunidad.parroquia.municipio", 
+            "RolesNivelTerritorial.RolesEquipoPolitico",
+            "jefeUbch", 
+            "jefeUbch.personalCaracterizacion", 
+            "jefeUbch.personalCaracterizacion.centroVotacion", 
+            "jefeUbch.centroVotacion");
         
         if($request->municipio_id != null){
             $municipio_id = $request->municipio_id;
@@ -221,7 +238,17 @@ class JefeComunidadController extends Controller
 
      
         $cedula = $request->cedula;
-        $query = JefeComunidad::with("personalCaracterizacion", "personalCaracterizacion.municipio", "personalCaracterizacion.parroquia", "personalCaracterizacion.centroVotacion", "personalCaracterizacion.partidoPolitico", "personalCaracterizacion.movilizacion", "comunidad", "jefeUbch", "jefeUbch.personalCaracterizacion", "jefeUbch.personalCaracterizacion.centroVotacion", "jefeUbch.centroVotacion");
+        $query = JefeComunidad::with(
+            "personalCaracterizacion", 
+            "personalCaracterizacion.municipio", 
+            "personalCaracterizacion.parroquia", 
+            "personalCaracterizacion.centroVotacion", 
+            "personalCaracterizacion.partidoPolitico", 
+            "personalCaracterizacion.movilizacion", 
+            "comunidad.parroquia.municipio", 
+            "RolesNivelTerritorial.RolesEquipoPolitico",
+            "jefeUbch", 
+            "jefeUbch.personalCaracterizacion", "jefeUbch.personalCaracterizacion.centroVotacion", "jefeUbch.centroVotacion");
         
         if($request->municipio_id != null){
  

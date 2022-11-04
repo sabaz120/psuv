@@ -47,7 +47,7 @@
                                         <div class="form-group">
                                             <label>Buscar</label>
                                             <div class="d-flex">
-                                                <input class="form-control" placeholder="cedula" @keypress="isNumber($event)" v-model="cedulaSearch">
+                                                <input class="form-control" placeholder="Cédula" @keypress="isNumber($event)" v-model="cedulaSearch">
                                                 <button class="btn btn-primary" v-if="!searchLoading" @click="search()">
                                                     <i class="fas fa-search"></i>
                                                 </button>
@@ -64,11 +64,15 @@
                                     <tr>
 
                                         <th class="datatable-cell datatable-cell-sort">
-                                            <span>UBCH</span>
+                                            <span>Municipio</span>
                                         </th>
 
                                         <th class="datatable-cell datatable-cell-sort">
                                             <span>Comunidad</span>
+                                        </th>
+
+                                        <th class="datatable-cell datatable-cell-sort">
+                                            <span>Rol</span>
                                         </th>
 
                                         <th class="datatable-cell datatable-cell-sort">
@@ -84,32 +88,18 @@
                                         </th>
 
                                         <th class="datatable-cell datatable-cell-sort">
-                                            <span>Tipo voto</span>
-                                        </th>
-
-                                        <th class="datatable-cell datatable-cell-sort">
-                                            <span>Partido</span>
-                                        </th>
-
-                                        <th class="datatable-cell datatable-cell-sort">
-                                            <span>Movilización</span>
-                                        </th>
-
-                                        <th class="datatable-cell datatable-cell-sort">
                                             <span>Acción</span>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="jefeComunidad in jefesComunidad">
-                                        <td>@{{ jefeComunidad.jefe_ubch.centro_votacion.nombre }}</td>
+                                        <td>@{{ jefeComunidad.comunidad.parroquia.municipio.nombre }}</td>
                                         <td>@{{ jefeComunidad.comunidad.nombre }}</td>
+                                        <td>@{{ jefeComunidad.roles_nivel_territorial.roles_equipo_politico.nombre_rol }}</td>
                                         <td>@{{ jefeComunidad.personal_caracterizacion.cedula }}</td>
                                         <td>@{{ jefeComunidad.personal_caracterizacion.primer_nombre }} @{{ jefeComunidad.personal_caracterizacion.primer_apellido }}</td>
                                         <td>@{{ jefeComunidad.personal_caracterizacion.telefono_principal }}</td>
-                                        <td>@{{ jefeComunidad.personal_caracterizacion.tipo_voto }}</td>
-                                        <td>@{{ jefeComunidad.personal_caracterizacion.partido_politico.nombre }}</td>
-                                        <td>@{{ jefeComunidad.personal_caracterizacion.movilizacion.nombre }}</td>
                                         <td>
                                             <button class="btn btn-success" data-toggle="modal" data-target=".marketModal" @click="edit(jefeComunidad.personal_caracterizacion, jefeComunidad.id, jefeComunidad)">
                                                 <i class="far fa-edit"></i>
@@ -221,15 +211,60 @@ const app = new Vue({
             currentPage:1,
             links:"",
             totalPages:"",
+            rolesEquipoPoliticos:[],
+            selectedRolEquipoPolitico:"",
+            readonlyRolEquipoPolitico:false,
+            municipios:[],
+            readonlyMunicipio:false,
+            parroquias:[],
+            readonlyParroquia:false,
+            centroVotaciones:[],
+            authMunicipioId:"{{Auth::user()->municipio ? Auth::user()->municipio->id : ''}}",
+            selectedMunicipio:"",
         }
     },
     methods: {
+        async getMunicipios(){
+            this.loading=true;
+            let res = await axios.get("{{ url('/api/municipios') }}",{
+                params:{
+                    municipio_id:this.authMunicipioId
+                }
+            })
+            this.municipios = res.data
+            this.loading=false;
+        },
+        async getParroquias(){
+            this.loading=true;
+            
+            this.selectedParroquia = ""
+            this.selectedCentroVotacion = ""
 
+            let res = await axios.get("{{ url('/api/parroquias') }}"+"/"+this.selectedMunicipio)
+            this.parroquias = res.data
+            this.loading=false;
+
+        },
+        async getCentroVotacion(){
+            this.loading=true;
+            this.selectedCentroVotacion = ""
+            let res = await axios.get("{{ url('/api/centro-votacion') }}"+"/"+this.selectedParroquia)
+            this.centroVotaciones = res.data
+            this.loading=false;
+
+        },
+        async getRolesEquiposPoliticos(){
+            this.loading=true;
+            let res = await axios.get("{{ url('/api/rol-equipo-politicos') }}")
+            this.rolesEquipoPoliticos = res.data
+            this.loading=false;
+        },
         create(){
             this.selectedId = ""
             this.action = "create"
             this.modalTitle = "Crear Jefe de Comunidad",
             this.selecteMunicipio = ""
+            this.selectedMunicipio = ""
             this.selectedParroquia = ""
             this.selectedCentroVotacion = ""
             this.selectedPartidoPolitico = ""
@@ -248,6 +283,10 @@ const app = new Vue({
             this.readonlyJefeCedula = false
             this.readonlyComunidad = false
             this.errors = []
+            this.selectedRolEquipoPolitico=""
+            this.readonlyMunicipio=false
+            this.readonlyParroquia=false
+            this.readonlyRolEquipoPolitico=false
         },
         async edit(elector, jefeId, model){
             this.selectedId = jefeId
@@ -258,16 +297,20 @@ const app = new Vue({
             this.readonlyCentroVotacion = true
             this.readonlyJefeCedula = true
             this.readonlyComunidad = true
-    
-            this.cedulaJefeUBCH = model.jefe_ubch.personal_caracterizacion.cedula
-            this.nombreJefeUBCH = model.jefe_ubch.personal_caracterizacion.full_name
-            this.selectedParroquia = model.jefe_ubch.personal_caracterizacion.parroquia_id
-
+            this.readonlyMunicipio=true
+            this.readonlyParroquia=true
+            // this.cedulaJefeUBCH = model.jefe_ubch.personal_caracterizacion.cedula
+            // this.nombreJefeUBCH = model.jefe_ubch.personal_caracterizacion.full_name
+            this.selectedMunicipio = model.comunidad.parroquia.municipio_id;
+            await this.getMunicipios();
+            await this.getParroquias();
+            this.selectedParroquia = model.comunidad.parroquia_id
+            await this.getCentroVotacion();
             await this.getComunidades()
             this.selectedComunidad = model.comunidad_id
-            
-            
             this.setElectorData(elector)
+            this.selectedRolEquipoPolitico=model.roles_nivel_territorial_id
+            this.readonlyRolEquipoPolitico=true
         },
         async suspend(elector, jefeId, model){
             this.selectedId = jefeId
@@ -367,15 +410,18 @@ const app = new Vue({
 
             this.nombre = elector.full_name
             this.selectedMunicipio = elector.municipio_id
+            await this.getMunicipios()
+            await this.getParroquias()
 
             this.selectedParroquia = elector.parroquia_id
-
+            await this.getCentroVotacion()
+            await this.getComunidades()
             this.selectedCentroVotacion = elector.centro_votacion_id
 
             this.telefonoPrincipal = elector.telefono_principal
             this.telefonoSecundario = elector.telefono_secundario
             this.fechaNacimiento = elector.fecha_nacimiento
-            this.tipoVoto = elector.tipo_voto
+            this.tipoVoto = elector.tipo_voto??"Duro"
             this.selectedEstado = elector.estado_id
             this.nacionalidad = elector.nacionalidad
 
@@ -384,8 +430,8 @@ const app = new Vue({
             this.primerApellido = elector.primer_apellido
             this.segundoApellido = elector.segundo_apellido == "null" || elector.segundo_apellido == null ? "" : elector.segundo_apellido
             this.sexo = elector.sexo
-            this.selectedPartidoPolitico = elector.partido_politico_id
-            this.selectedMovilizacion = elector.movilizacion_id
+            this.selectedPartidoPolitico = elector.partido_politico_id??1
+            this.selectedMovilizacion = elector.movilizacion_id??""
 
         },  
         async fetch(link = ""){
@@ -405,7 +451,28 @@ const app = new Vue({
                 this.errors = []
                 this.storeLoader = true
 
-                let res = await axios.post("{{ url('api/raas/jefe-comunidad/store') }}", {cedulaJefe: this.cedulaJefeUBCH, cedula: this.cedula, nacionalidad: this.nacionalidad, primer_apellido: this.primerApellido, segundo_apellido: this.segundoApellido, primer_nombre: this.primerNombre, segundo_nombre: this.segundoNombre, sexo: this.sexo, telefono_principal: this.telefonoPrincipal, telefono_secundario: this.telefonoSecundario, tipo_voto: this.tipoVoto, estado_id: this.selectedEstado, municipio_id: this.selectedMunicipio, parroquia_id: this.selectedParroquia, centro_votacion_id: this.selectedCentroVotacion, partido_politico_id: this.selectedPartidoPolitico, movilizacion_id: this.selectedMovilizacion, fecha_nacimiento: this.fechaNacimiento, comunidad: this.selectedComunidad})
+                let res = await axios.post("{{ url('api/raas/jefe-comunidad/store') }}", {
+                    cedulaJefe: this.cedulaJefeUBCH, 
+                    cedula: this.cedula, 
+                    nacionalidad: this.nacionalidad, 
+                    primer_apellido: this.primerApellido, 
+                    segundo_apellido: this.segundoApellido, 
+                    primer_nombre: this.primerNombre, 
+                    segundo_nombre: this.segundoNombre, 
+                    sexo: this.sexo, 
+                    telefono_principal: this.telefonoPrincipal, 
+                    telefono_secundario: this.telefonoSecundario, 
+                    tipo_voto: this.tipoVoto, 
+                    estado_id: this.selectedEstado, 
+                    municipio_id: this.selectedMunicipio, 
+                    parroquia_id: this.selectedParroquia, 
+                    centro_votacion_id: this.selectedCentroVotacion, 
+                    partido_politico_id: this.selectedPartidoPolitico, 
+                    movilizacion_id: this.selectedMovilizacion, 
+                    fecha_nacimiento: this.fechaNacimiento, 
+                    comunidad: this.selectedComunidad,
+                    rol_equipo_politico_id:this.selectedRolEquipoPolitico
+                })
                 
                 this.storeLoader = false
 
@@ -415,11 +482,8 @@ const app = new Vue({
                         text:res.data.msg,
                         icon: "success"
                     }).then(ans => {
-
                         $('.marketModal').modal('hide')
                         $('.modal-backdrop').remove()
-                      
-
                     })
 
                     this.fetch()
@@ -454,7 +518,29 @@ const app = new Vue({
                 this.errors = []
                 this.updateLoader = true
 
-                let res = await axios.post("{{ url('api/raas/jefe-comunidad/update') }}", {cedulaJefe: this.cedulaJefeUBCH, cedula: this.cedula, nacionalidad: this.nacionalidad, primer_apellido: this.primerApellido, segundo_apellido: this.segundoApellido, primer_nombre: this.primerNombre, segundo_nombre: this.segundoNombre, sexo: this.sexo, telefono_principal: this.telefonoPrincipal, telefono_secundario: this.telefonoSecundario, tipo_voto: this.tipoVoto, estado_id: this.selectedEstado, municipio_id: this.selectedMunicipio, parroquia_id: this.selectedParroquia, centro_votacion_id: this.selectedCentroVotacion, partido_politico_id: this.selectedPartidoPolitico, movilizacion_id: this.selectedMovilizacion, fecha_nacimiento: this.fechaNacimiento, id: this.selectedId, comunidad: this.selectedComunidad})
+                let res = await axios.post("{{ url('api/raas/jefe-comunidad/update') }}", {
+                    cedulaJefe: this.cedulaJefeUBCH, 
+                    cedula: this.cedula, 
+                    nacionalidad: this.nacionalidad, 
+                    primer_apellido: this.primerApellido, 
+                    segundo_apellido: this.segundoApellido, 
+                    primer_nombre: this.primerNombre, 
+                    segundo_nombre: this.segundoNombre, 
+                    sexo: this.sexo, 
+                    telefono_principal: this.telefonoPrincipal, 
+                    telefono_secundario: this.telefonoSecundario, 
+                    tipo_voto: this.tipoVoto, 
+                    estado_id: this.selectedEstado, 
+                    municipio_id: this.selectedMunicipio, 
+                    parroquia_id: this.selectedParroquia,
+                    centro_votacion_id: this.selectedCentroVotacion, 
+                    partido_politico_id: this.selectedPartidoPolitico, 
+                    movilizacion_id: this.selectedMovilizacion, 
+                    fecha_nacimiento: this.fechaNacimiento, 
+                    id: this.selectedId, 
+                    comunidad: this.selectedComunidad,
+                    rol_equipo_politico_id:this.selectedRolEquipoPolitico
+                })
                 
                 this.updateLoader = false
 
@@ -534,29 +620,24 @@ const app = new Vue({
        
 
         },
-        
-       
         async getComunidades(){
-
+            this.loading=true;
             let res = await axios.get("{{ url('/api/comunidades') }}"+"/"+this.selectedParroquia)
             this.comunidades = res.data
-
+            this.loading=false;
         },
-
         async getPartidosPoliticos(){
-
+            this.loading=true;
             let res = await axios.get("{{ url('/api/partidos-politicos') }}")
             this.partidosPoliticos = res.data
-
+            this.loading=false;
         },
-
         async getMovilizaciones(){
-
+            this.loading=true;
             let res = await axios.get("{{ url('/api/movilizacion') }}")
             this.movilizaciones = res.data
-
+            this.loading=false;
         },
-
         isNumber(evt) {
             evt = (evt) ? evt : window.event;
             var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -579,13 +660,16 @@ const app = new Vue({
 
 
         }
-        
-
     },
-    created() {
-        this.getPartidosPoliticos()
-        this.getMovilizaciones()
-        this.fetch()
+    async created() {
+        await this.getPartidosPoliticos()
+        await this.getMovilizaciones()
+        await this.fetch()
+        await this.getMunicipios();
+        if(this.authMunicipioId){
+            this.selectedMunicipio=this.authMunicipioId;
+        }
+        await this.getRolesEquiposPoliticos();
 
     }
 });

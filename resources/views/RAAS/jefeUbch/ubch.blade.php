@@ -220,6 +220,7 @@ const app = new Vue({
         }
     },
     methods: {
+
         async getRolesEquiposPoliticos(){
             let res = await axios.get("{{ url('/api/rol-equipo-politicos') }}")
             this.rolesEquipoPoliticos = res.data
@@ -229,6 +230,7 @@ const app = new Vue({
             this.action = "create"
             this.modalTitle = "Crear Jefe de UBCH",
             this.selecteMunicipio = ""
+            this.selectedEstado=""
             this.selectedParroquia = ""
             this.selectedCentroVotacion = ""
             this.selectedPartidoPolitico = ""
@@ -572,16 +574,18 @@ const app = new Vue({
 
         },
         async getEstados(){
-
+            this.selectedMunicipio = ""
+            this.selectedParroquia = ""
+            this.selectedCentroVotacion = ""
             let res = await axios.get("{{ url('/api/estados') }}")
             this.estados = res.data
 
         },      
         async getMunicipios(){
 
+            this.selectedMunicipio = ""
             this.selectedParroquia = ""
             this.selectedCentroVotacion = ""
-
             let res = await axios.get("{{ url('/api/municipios') }}",{
                 params:{
                     estado_id:this.selectedEstado
@@ -592,6 +596,7 @@ const app = new Vue({
         },
         async getParroquias(){
             
+            this.selectedParroquia = ""
             this.selectedCentroVotacion = ""
 
             let res = await axios.get("{{ url('/api/parroquias') }}"+"/"+this.selectedMunicipio)
@@ -600,7 +605,7 @@ const app = new Vue({
         },
 
         async getCentroVotacion(){
-
+            this.selectedCentroVotacion = ""
             let res = await axios.get("{{ url('/api/centro-votacion') }}"+"/"+this.selectedParroquia)
             this.centroVotaciones = res.data
 

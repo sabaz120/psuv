@@ -24,14 +24,15 @@ class JefeComunidadUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            "comunidad" => "required",
-            "cedula" => "required|exists:elector,cedula",
-            "cedulaJefe" => "required|exists:personal_caracterizacion,cedula",
+            "comunidad" => "required|exists:comunidad,id",
+            "cedula" => "required",
+            //"cedulaJefe" => "required|exists:personal_caracterizacion,cedula",
             "tipo_voto" => "required",
             "telefono_principal" => "nullable|max:11",
             "telefono_secundario" => "nullable|max:11",
             "partido_politico_id" => "required|exists:partido_politico,id",
-            "movilizacion_id" => "required|exists:movilizacion,id"
+            "movilizacion_id" => "required|exists:movilizacion,id",
+            "rol_equipo_politico_id"=>"required|exists:roles_equipo_politico,id"
         ];
     }
 }

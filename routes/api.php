@@ -173,6 +173,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 Route::get("estados", [EstadoController::class, "all"]);
 Route::get("municipios", [MunicipioController::class, "all"]);
 
+Route::get("parroquias", [ParroquiaController::class, "index"]);
 Route::get("parroquias/{municipio_id}", [ParroquiaController::class, "parroquiasByMunicipio"]);
 Route::get("parroquias-busqueda/{municipio_nombre}", [ParroquiaController::class, "parroquiasByMunicipioNombre"]);
 
