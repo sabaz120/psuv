@@ -10,13 +10,18 @@ class MunicipioController extends Controller
 {
     function all(Request $request){
         $municipio_id=$request->input('municipio_id');
+        $estado_id=$request->input('estado_id');
         $result=Model::query();
         if($municipio_id){
-            $query->where('id',$municipio_id);
+            $result->where('id',$municipio_id);
+        }
+        if($estado_id){
+            $result->where('estado_id',$estado_id);
         }
         $result->orderBy('nombre');
         $result=$result->get();
         return response()->json($result);
 
     }
+
 }

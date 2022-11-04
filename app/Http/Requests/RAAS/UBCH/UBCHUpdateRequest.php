@@ -30,7 +30,8 @@ class UBCHUpdateRequest extends FormRequest
             "telefono_principal" => "nullable|max:11",
             "telefono_secundario" => "nullable|max:11",
             "partido_politico_id" => "required|exists:partido_politico,id",
-            "movilizacion_id" => "required|exists:movilizacion,id"
+            "movilizacion_id" => "required|exists:movilizacion,id",
+            "rol_equipo_politico_id"=>"required|exists:roles_equipo_politico,id"
         ];
     }
 }
