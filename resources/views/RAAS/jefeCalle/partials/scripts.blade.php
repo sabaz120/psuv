@@ -16,10 +16,10 @@
                 comunidad_id:"0",
                 calle_id:"0",
                 personal_caraterizacion:null,
-                tipo_voto:"Duro",
+                tipo_voto:"duro",
                 telefono_principal:"",
                 telefono_secundario:"",
-                partido_politico_id:"",
+                partido_politico_id:1,
                 movilizacion_id:"",
                 parroquia_id:"0"
             },
@@ -308,10 +308,10 @@
                 this.form.comunidad_id="0";
                 this.form.calle_id="0";
                 this.form.personal_caraterizacion=null;
-                this.form.tipo_voto="";
+                this.form.tipo_voto="duro";
                 this.form.telefono_principal="";
                 this.form.telefono_secundario="";
-                this.form.partido_politico_id="";
+                this.form.partido_politico_id=1;
                 this.form.movilizacion_id="";
                 this.cedula_jefe="";
                 this.cedula_jefe_comunidad="";
