@@ -28,7 +28,8 @@ class JefeCalleController extends Controller
                 "jefeComunidad.personalCaracterizacion",
                 "jefeComunidad.comunidad",
                 "jefeComunidad.comunidades",
-                "calle.comunidad.parroquia.municipio"
+                "calle.comunidad.centroVotacion.parroquia.municipio",
+                "RolesNivelTerritorial.RolesEquipoPolitico",
             ];
             //Init query
             $query=Model::query();
@@ -115,10 +116,17 @@ class JefeCalleController extends Controller
             if($exist){
                 throw new \Exception('Este elector ya ha sido registrado como jefe de esta calle.', 404);
             }
+            $rolEquipoPolitico=\App\Models\RolesEquipoPolitico::find($request->rol_equipo_politico_id);
+            if(!$rolEquipoPolitico->rolNivelTerritorial){
+                return response()->json(["success" => false, "msg" => "El rol seleccionado no posee un nivel territorial configurado"]);
+            }
+            $data['roles_nivel_territorial_id']=$rolEquipoPolitico->rolNivelTerritorial->id;
             //Cada calle solo puede tener un jefe de calle
-            $exist=Model::where("calle_id",$data['calle_id'])->first();
+            $exist=Model::where("calle_id",$data['calle_id'])
+            ->where("roles_nivel_territorial_id",$rolEquipoPolitico->rolNivelTerritorial->id)
+            ->first();
             if($exist){
-                throw new \Exception('Esta calle, ya posee un jefe de calle: '.$exist->personalCaracterizacion->full_name, 404);
+                throw new \Exception('Esta calle, ya posee un jefe de calle (con este rol): '.$exist->personalCaracterizacion->full_name, 404);
             }
             //Create entity
             $entity=Model::create($data);
@@ -186,11 +194,13 @@ class JefeCalleController extends Controller
                     "movilizacion_id"=>$request->movilizacion_id,
                 ]);
             }//exist & update
-            $exist=Model::where('personal_caraterizacion_id',$elector->id)
-            ->where("calle_id",$data['calle_id'])->where("id","!=",$id)->first();
-            if($exist){
-                throw new \Exception('Este elector ya ha sido registrado como jefe de esta calle.', 404);
-            }
+            // $exist=Model::where('personal_caraterizacion_id',$elector->id)
+            // ->where("calle_id",$data['calle_id'])
+            // ->where("id","!=",$id)
+            // ->first();
+            // if($exist){
+            //     throw new \Exception('Este elector ya ha sido registrado como jefe de esta calle.', 404);
+            // }
             //Create entity
             $entity->update($data);
             DB::commit();
@@ -232,45 +242,6 @@ class JefeCalleController extends Controller
         return $this->response($response, $code ?? 200);        
 
     }
-
-    // function suspend(JefeComunidadUpdateRequest $request){
-
-    //     try{
-
-    //         if($this->verificarDuplicidadCedula($request->cedula) > 0){
-    //             return response()->json(["success" => false, "msg" => "Esta cédula ya pertenece a un Jefe de Comunidad"]);
-    //         }
-
-    //         $jefeComunidad = JefeComunidad::find($request->id);
-    //         $jefeUbchId = $jefeComunidad->jefe_ubch_id;
-    //         $comunidadId = $jefeComunidad->comunidad_id;
-    //         $jefeComunidad->delete();
-
-    //         $personalCaracterizacion = PersonalCaracterizacion::where("cedula", $request->cedula)->first();
-            
-    //         if($personalCaracterizacion == null){
-    //             $personalCaracterizacion = $this->storePersonalCaracterizacion($request);
-    //         }
-
-    //         $jefeComunidad = new JefeComunidad;
-    //         $jefeComunidad->personal_caracterizacion_id = $personalCaracterizacion->id;
-    //         $jefeComunidad->comunidad_id = $comunidadId;
-    //         $jefeComunidad->jefe_ubch_id = $jefeUbchId;
-    //         $jefeComunidad->save();
-
-    //         $personalCaracterizacion = $this->updatePersonalCaracterizacion($jefeComunidad->personal_caracterizacion_id, $request);
-
-    //         return response()->json(["success" => true, "msg" => "Jefe de Comunidad suspendido y sustituido"]);
-
-    //     }
-    //     catch(\Exception $e){
-
-    //         return response()->json(["success" => false, "msg" => "Ha ocurrido un problema", "err" => $e->getMessage(), "ln" => $e->getLine()]);
-
-    //     }
-        
-
-    // }//suspend
 
     public function searchByCedulaField($cedula){
         try {

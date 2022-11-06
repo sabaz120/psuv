@@ -40,10 +40,30 @@
 
                         <div class="col-md-4">
                             <div class="form-group">
+                                <label for="calle">Municipio</label>
+                                <select class="form-control" v-model="form.municipio_id" @change="getParroquias();" :disabled="entityId">
+                                    <option value="0">Seleccione</option>
+                                    <option :value="municipio.id" v-for="municipio in municipios">@{{ municipio.nombre }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
                                 <label for="calle">Parroquia</label>
-                                <select class="form-control" v-model="form.parroquia_id" @change="getComunidades();" :disabled="entityId">
+                                <select class="form-control" v-model="form.parroquia_id" @change="getCentroVotacion();" :disabled="entityId">
                                     <option value="0">Seleccione</option>
                                     <option :value="parroquia.id" v-for="parroquia in parroquias">@{{ parroquia.nombre }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="calle">UBCH</label>
+                                <select class="form-control" v-model="form.centro_votacion_id" @change="getComunidades();" :disabled="entityId">
+                                    <option value="0">Seleccione</option>
+                                    <option :value="centroVotacion.id" v-for="centroVotacion in centroVotaciones">@{{ centroVotacion.nombre }}</option>
                                 </select>
                             </div>
                         </div>
@@ -73,6 +93,16 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="Rol">Rol</label>
+                                <select class="form-control" v-model="form.rol_equipo_politico_id" :disabled="entityId">
+                                    <option value="0">Seleccione</option>
+                                    <option :value="rol.id" v-for="rol in rolesEquipoPoliticos">@{{ rol.nombre_rol }}</option>
+                                </select>
+                            </div>
+                        </div> 
 
                         <div class="col-md-4">
                             <div class="form-group">

@@ -26,7 +26,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="parroquia">Parroquia</label>
-                                <select class="form-control" v-model="selectedParroquia" id="parroquia" :disabled="readonlyParroquia" @change="getCentroVotacion();getComunidades();selectedComunidad=''">
+                                <select class="form-control" v-model="selectedParroquia" id="parroquia" :disabled="readonlyParroquia" @change="getCentroVotacion();">
                                     <option value="">Seleccione</option>
                                     <option :value="parroquia.id" v-for="parroquia in parroquias">@{{ parroquia.nombre }}</option>
                                 </select>
@@ -37,7 +37,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="centroVotacion">UBCH</label>
-                                <select class="form-control" v-model="selectedCentroVotacion" id="centroVotacion" :disabled="readonlyCentroVotacion">
+                                <select class="form-control" v-model="selectedCentroVotacion" id="centroVotacion" :disabled="readonlyCentroVotacion" @change="selectedComunidad='';getComunidades()">
                                     <option value="">Seleccione</option>
                                     <option :value="centroVotacion.id" v-for="centroVotacion in centroVotaciones">@{{ centroVotacion.nombre }}</option>
                                 </select>

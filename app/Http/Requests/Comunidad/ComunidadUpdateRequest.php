@@ -25,7 +25,7 @@ class ComunidadUpdateRequest extends FormRequest
     {
         return [
             "nombre" => "required",
-            "parroquia_id" => "required|exists:parroquia,id"
+            "centro_votacion_id" => "required|exists:centro_votacion,id"
         ];
     }
 }

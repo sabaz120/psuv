@@ -12,7 +12,6 @@ class JefeCalle extends Model
     protected $fillable=[
         "calle_id",
         "personal_caraterizacion_id",
-        "jefe_comunidad_id",
         "roles_nivel_territorial_id"
     ];
     public function calle(){

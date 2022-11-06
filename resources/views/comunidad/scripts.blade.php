@@ -15,7 +15,9 @@
                 municipios:[],
                 selectedMunicipio:"",
                 parroquias:[],
-                selectedParroquias:"",
+                selectedParroquia:"",
+                centroVotaciones:[],
+                selectedCentroVotacion:"",
                 selectedId:"",
                 nombre:"",
                 errors:[],
@@ -33,20 +35,28 @@
             }
         },
         methods: {
-
+            async getCentroVotacion(){
+                this.selectedCentroVotacion = ""
+                let res = await axios.get("{{ url('/api/centro-votacion') }}"+"/"+this.selectedParroquia)
+                this.centroVotaciones = res.data
+            },
             create(){
                 this.selectedId = ""
                 this.action = "create"
                 this.modalTitle = "Crear comunidad",
                 this.selecteMunicipio = ""
                 this.selectedParroquia = ""
+                this.selectedCentroVotacion = ""
                 this.nombre=""
                 this.errors = []
+                this.centroVotaciones=[];
             },
             async edit(comunidad){
-                this.selectedMunicipio = comunidad.parroquia.municipio.id
+                this.selectedMunicipio = comunidad.centro_votacion?.parroquia?.municipio_id
                 await this.getParroquias()
-                this.selectedParroquia = comunidad.parroquia.id
+                this.selectedParroquia = comunidad.centro_votacion?.parroquia_id;
+                await this.getCentroVotacion();
+                this.selectedCentroVotacion = comunidad.centro_votacion_id;
                 this.selectedId = comunidad.id
                 this.action = "edit"
                 this.modalTitle = "Editar comunidad"
@@ -104,7 +114,11 @@
                     this.errors = []
                     this.storeLoader = true
 
-                    let res = await axios.post("{{ url('api/comunidad/store') }}", {parroquia_id: this.selectedParroquia, "nombre": this.nombre})
+                    let res = await axios.post("{{ url('api/comunidad/store') }}", {
+                        parroquia_id: this.selectedParroquia, 
+                        centro_votacion_id: this.selectedCentroVotacion, 
+                        "nombre": this.nombre
+                    })
                     
                     this.storeLoader = false
 
@@ -153,7 +167,12 @@
                     this.errors = []
                     this.updateLoader = true
 
-                    let res = await axios.post("{{ url('api/comunidad/update') }}", {nombre: this.nombre, parroquia_id: this.selectedParroquia, id: this.selectedId})
+                    let res = await axios.post("{{ url('api/comunidad/update') }}", {
+                        nombre: this.nombre, 
+                        parroquia_id: this.selectedParroquia, 
+                        centro_votacion_id: this.selectedCentroVotacion, 
+                        id: this.selectedId
+                    })
                     
                     this.updateLoader = false
 
@@ -265,8 +284,6 @@
                 
 
             }
-            
-
         },
         created() {
             this.selectedMunicipio = this.authMunicipio

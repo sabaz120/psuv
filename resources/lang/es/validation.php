@@ -192,7 +192,8 @@ return [
       "holder_dni" => "cedula",
       "payment_method_id"=>"Método de pago",
       "rol_equipo_politico_id"=>"rol equipo político",
-      "movilizacion_id"=>"movilización"
+      "movilizacion_id"=>"movilización",
+      "centro_votacion_id"=>"UBCH",
     ],
 
 ];

@@ -24,14 +24,14 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            "jefe_comunidad_id" => "required|exists:jefe_comunidad,id",
             "personal_caraterizacion" => "required",
             "tipo_voto" => "required",
             "telefono_principal" => "nullable|max:11",
             "telefono_secundario" => "nullable|max:11",
             "partido_politico_id" => "required|exists:partido_politico,id",
             "movilizacion_id" => "required|exists:movilizacion,id",
-            "calle_id" => "required|exists:calle,id"
+            "calle_id" => "required|exists:calle,id",
+            "rol_equipo_politico_id"=>"required|exists:roles_equipo_politico,id"
         ];
     }
 }
