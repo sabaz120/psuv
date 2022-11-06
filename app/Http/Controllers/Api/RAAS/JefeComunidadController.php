@@ -72,29 +72,27 @@ class JefeComunidadController extends Controller
     function store(JefeComunidadStoreRequest $request){
 
         try{
-
-            if($this->verificarExistenciaOtrosJefesComunidad($request->comunidad) > 0){
-                return response()->json(["success" => false, "msg" => "Esta comunidad ya posee un Jefe"]);
-            }
-
-            $personalCaracterizacion = PersonalCaracterizacion::where("cedula", $request->cedula)->first();
             
+            $personalCaracterizacion = PersonalCaracterizacion::where("cedula", $request->cedula)->first();
             if($personalCaracterizacion == null){
                 $personalCaracterizacion = $this->storePersonalCaracterizacion($request);
             }
-        
             $rolEquipoPolitico=\App\Models\RolesEquipoPolitico::find($request->rol_equipo_politico_id);
             if(!$rolEquipoPolitico->rolNivelTerritorial){
                 return response()->json(["success" => false, "msg" => "El rol seleccionado no posee un nivel territorial configurado"]);
+            }
+            $jefeComunidad=JefeComunidad::where("comunidad_id", $request->comunidad)
+            ->where("roles_nivel_territorial_id",$rolEquipoPolitico->rolNivelTerritorial->id)
+            ->count();
+            if(($jefeComunidad) > 0){
+                return response()->json(["success" => false, "msg" => "Esta comunidad ya posee un Jefe"]);
             }
             $jefeComunidad = new JefeComunidad;
             $jefeComunidad->personal_caracterizacion_id = $personalCaracterizacion->id;
             $jefeComunidad->comunidad_id = $request->comunidad;
             $jefeComunidad->roles_nivel_territorial_id=$rolEquipoPolitico->rolNivelTerritorial->id;
             $jefeComunidad->save();
-
             $this->updatePersonalCaracterizacion($jefeComunidad->personal_caracterizacion_id, $request);
-
             return response()->json(["success" => true, "msg" => "Jefe de Comunidad creado"]);
         }catch(\Exception $e){
 
@@ -162,6 +160,13 @@ class JefeComunidadController extends Controller
             if(!$rolEquipoPolitico->rolNivelTerritorial){
                 return response()->json(["success" => false, "msg" => "El rol seleccionado no posee un nivel territorial configurado"]);
             }
+            $jefeComunidadExist=JefeComunidad::where("comunidad_id", $request->comunidad)
+            ->where("roles_nivel_territorial_id",$rolEquipoPolitico->rolNivelTerritorial->id)
+            ->where("personal_caracterizacion_id","!=",$personalCaracterizacion->id)
+            ->count();
+            if(($jefeComunidadExist) > 0){
+                return response()->json(["success" => false, "msg" => "Esta comunidad ya posee un Jefe"]);
+            }
             $jefeComunidad->personal_caracterizacion_id = $personalCaracterizacion->id;
             $jefeComunidad->roles_nivel_territorial_id=$rolEquipoPolitico->rolNivelTerritorial->id;
             $jefeComunidad->update();
@@ -214,7 +219,7 @@ class JefeComunidadController extends Controller
             "personalCaracterizacion.centroVotacion", 
             "personalCaracterizacion.partidoPolitico", 
             "personalCaracterizacion.movilizacion", 
-            "comunidad.parroquia.municipio", 
+            "comunidad.centroVotacion.parroquia.municipio", 
             "RolesNivelTerritorial.RolesEquipoPolitico",
             "jefeUbch", 
             "jefeUbch.personalCaracterizacion", 
@@ -245,7 +250,7 @@ class JefeComunidadController extends Controller
             "personalCaracterizacion.centroVotacion", 
             "personalCaracterizacion.partidoPolitico", 
             "personalCaracterizacion.movilizacion", 
-            "comunidad.parroquia.municipio", 
+            "comunidad.centroVotacion.parroquia.municipio", 
             "RolesNivelTerritorial.RolesEquipoPolitico",
             "jefeUbch", 
             "jefeUbch.personalCaracterizacion", "jefeUbch.personalCaracterizacion.centroVotacion", "jefeUbch.centroVotacion");

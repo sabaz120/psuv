@@ -94,7 +94,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="jefeComunidad in jefesComunidad">
-                                        <td>@{{ jefeComunidad.comunidad.parroquia.municipio.nombre }}</td>
+                                        <td>@{{ jefeComunidad.comunidad?.centro_votacion?.parroquia.municipio.nombre }}</td>
                                         <td>@{{ jefeComunidad.comunidad.nombre }}</td>
                                         <td>@{{ jefeComunidad.roles_nivel_territorial.roles_equipo_politico.nombre_rol }}</td>
                                         <td>@{{ jefeComunidad.personal_caracterizacion.cedula }}</td>
@@ -301,15 +301,16 @@ const app = new Vue({
             this.readonlyParroquia=true
             // this.cedulaJefeUBCH = model.jefe_ubch.personal_caracterizacion.cedula
             // this.nombreJefeUBCH = model.jefe_ubch.personal_caracterizacion.full_name
-            this.selectedMunicipio = model.comunidad.parroquia.municipio_id;
+            this.selectedMunicipio = model.comunidad?.centro_votacion?.parroquia?.municipio_id;
             await this.getMunicipios();
             await this.getParroquias();
-            this.selectedParroquia = model.comunidad.parroquia_id
+            this.selectedParroquia = model.comunidad.centro_votacion?.parroquia_id
             await this.getCentroVotacion();
+            this.selectedCentroVotacion = model.comunidad?.centro_votacion_id;
             await this.getComunidades()
             this.selectedComunidad = model.comunidad_id
             this.setElectorData(elector)
-            this.selectedRolEquipoPolitico=model.roles_nivel_territorial_id
+            this.selectedRolEquipoPolitico=model.roles_nivel_territorial?.roles_equipo_politico_id
             this.readonlyRolEquipoPolitico=true
         },
         async suspend(elector, jefeId, model){
@@ -409,14 +410,14 @@ const app = new Vue({
         async setElectorData(elector){
 
             this.nombre = elector.full_name
-            this.selectedMunicipio = elector.municipio_id
-            await this.getMunicipios()
-            await this.getParroquias()
+            //this.selectedMunicipio = elector.municipio_id
+            //await this.getMunicipios()
+            //await this.getParroquias()
 
-            this.selectedParroquia = elector.parroquia_id
-            await this.getCentroVotacion()
-            await this.getComunidades()
-            this.selectedCentroVotacion = elector.centro_votacion_id
+            //this.selectedParroquia = elector.parroquia_id
+            //await this.getCentroVotacion()
+            //await this.getComunidades()
+            //this.selectedCentroVotacion = elector.centro_votacion_id
 
             this.telefonoPrincipal = elector.telefono_principal
             this.telefonoSecundario = elector.telefono_secundario
@@ -622,8 +623,10 @@ const app = new Vue({
         },
         async getComunidades(){
             this.loading=true;
-            let res = await axios.get("{{ url('/api/comunidades') }}"+"/"+this.selectedParroquia)
-            this.comunidades = res.data
+            let res = await axios.get("{{ url('/api/comunidades') }}",{
+                "centro_votacion_id":this.selectedCentroVotacion
+            })
+            this.comunidades = res.data.data
             this.loading=false;
         },
         async getPartidosPoliticos(){

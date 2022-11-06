@@ -85,9 +85,8 @@
                                 <tbody>
                                     <tr v-for="comunidad in comunidades">
                                         <td>@{{ comunidad.nombre }}</td>
-                                        <td>@{{ comunidad.parroquia.nombre }}</td>
-                                        <td>@{{ comunidad.parroquia.municipio.nombre }}</td>
-        
+                                        <td>@{{ comunidad?.centro_votacion?.parroquia?.nombre}}</td>
+                                        <td>@{{ comunidad?.centro_votacion?.parroquia?.municipio?.nombre }}</td>
                                         <td>
                                             <button class="btn btn-success" data-toggle="modal" data-target=".marketModal" @click="edit(comunidad)">
                                                 <i class="far fa-edit"></i>

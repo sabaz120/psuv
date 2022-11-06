@@ -41,10 +41,6 @@ class UBCHController extends Controller
                 return response()->json(["success" => false, "msg" => "Esta cédula ya pertenece a un Jefe de UBCH"]);
             }
 
-            if($this->verificarUnSoloCentroVotacion($request->centro_votacion_id) > 0){
-                return response()->json(["success" => false, "msg" => "Ya existe otro jefe para ésta UBCH"]);
-            }
-
             $personalCaracterizacion = PersonalCaracterizacion::where("cedula", $request->cedula)->first();
             
             if($personalCaracterizacion == null){
@@ -55,7 +51,11 @@ class UBCHController extends Controller
             if(!$rolEquipoPolitico->rolNivelTerritorial){
                 return response()->json(["success" => false, "msg" => "El rol seleccionado no posee un nivel territorial configurado"]);
             }
-        
+
+            if($this->verificarUnSoloRolPorCentroVotacion($request->centro_votacion_id,$rolEquipoPolitico->rolNivelTerritorial->id) > 0){
+                return response()->json(["success" => false, "msg" => "Ya existe un jefe para ésta UBCH"]);
+            }
+
             $jefeUbch = new JefeUbch;
             $jefeUbch->personal_caracterizacion_id = $personalCaracterizacion->id;
             $jefeUbch->centro_votacion_id = $request->centro_votacion_id;
@@ -86,6 +86,13 @@ class UBCHController extends Controller
         return  JefeUbch::where("centro_votacion_id", $centro_votacion)->count();
 
     }
+
+    function verificarUnSoloRolPorCentroVotacion($centro_votacion,$roles_nivel_territorial_id){
+        return  JefeUbch::where("centro_votacion_id", $centro_votacion)
+        ->where("roles_nivel_territorial_id",$roles_nivel_territorial_id)
+        ->count();
+    }
+    
 
     function jefeUbchByCedula(UBCHCedulaSearchRequest $request){
         $cedula = $request->cedulaJefe;

@@ -21,7 +21,10 @@
                 telefono_secundario:"",
                 partido_politico_id:1,
                 movilizacion_id:"",
-                parroquia_id:"0"
+                parroquia_id:"0",
+                municipio_id:"{{Auth::user()->municipio ? Auth::user()->municipio->id : 0}}",
+                centro_votacion_id:"0",
+                rol_equipo_politico_id:"0"
             },
             entityId:null,
             //search
@@ -32,7 +35,9 @@
             cedula_jefe_error:"",
             searchText:"",
             //Array data
+            municipios:[],
             parroquias:[],
+            centroVotaciones:[],
             comunidades:[],
             calles:[],
             rolesEquipoPoliticos:[],
@@ -44,14 +49,11 @@
             partidosPoliticos:[],
             tiposDeMovilizacion:[],
             results:[],
-
             //paginate
             modalTitle:"Crear Jefe de Calle",
             currentPage:1,
             links:"",
             totalPages:"",
-            //auth
-            authMunicipioId:"{{Auth::user()->municipio ? Auth::user()->municipio->id : ''}}",
    
         },
         created: function() {
@@ -60,16 +62,39 @@
                 await this.fetch();
                 await this.obtenerPartidosPoliticos();
                 await this.obtenerTiposMovilizacion();
-                await this.getParroquias();
+                this.getMunicipios();
+                if(parseInt(this.form.municipio_id)){
+                    await this.getParroquias();
+                }
+                await this.getRolesEquiposPoliticos();
             });
         },
         methods: {
+            async getMunicipios(){
+                this.loading=true;
+                let res = await axios.get("{{ url('/api/municipios') }}",{
+                    params:{
+                        municipio_id:this.form.municipio_id
+                    }
+                })
+                this.municipios = res.data
+                this.loading=false;
+            },
             async getParroquias(){
                 this.loading=true;
                 let res = await axios.get("{{ url('/api/parroquias') }}",{
-                    municipio_id:this.authMunicipioId
+                    params:{
+                        municipio_id:this.form.municipio_id
+                    }
                 })
                 this.parroquias = res.data
+                this.loading=false;
+            },
+            async getCentroVotacion(){
+                this.loading=true;
+                this.selectedCentroVotacion = ""
+                let res = await axios.get("{{ url('/api/centro-votacion') }}"+"/"+this.form.parroquia_id)
+                this.centroVotaciones = res.data
                 this.loading=false;
             },
             async getRolesEquiposPoliticos(){
@@ -80,7 +105,7 @@
             },
             async getComunidades(){
                 this.loading=true;
-                let res = await axios.get("{{ url('/api/comunidades') }}"+"/"+this.form.parroquia_id)
+                let res = await axios.get("{{ url('/api/comunidades') }}"+"/"+this.form.centro_votacion_id)
                 this.comunidades = res.data
                 this.loading=false;
             },
@@ -98,13 +123,7 @@
             },
             async store(){
                 //Validations
-                if(this.form.jefe_comunidad_id==null){
-                    swal({
-                        text:"Debe indicar el jefe de comunidad",
-                        icon:"error"
-                    });
-                    return false;
-                }else if(this.form.personal_caraterizacion==null){
+                if(this.form.personal_caraterizacion==null){
                     swal({
                         text:"Debe indicar el jefe de calle",
                         icon:"error"
@@ -116,9 +135,9 @@
                         icon:"error"
                     });
                     return false;
-                }else if(this.form.tipo_voto==""){
+                }else if(this.form.rol_equipo_politico_id==""){
                     swal({
-                        text:"Debe seleccionar un tipo de voto",
+                        text:"Debe seleccionar un rol",
                         icon:"error"
                     });
                     return false;
@@ -131,12 +150,6 @@
                 }else if(this.form.telefono_secundario==""){
                     swal({
                         text:"Debe ingresar un teléfono secundario",
-                        icon:"error"
-                    });
-                    return false;
-                }else if(this.form.partido_politico_id==""){
-                    swal({
-                        text:"Debe seleccionar un partido político",
                         icon:"error"
                     });
                     return false;
@@ -178,10 +191,6 @@
             async edit(entity){
                 this.action="edit";
                 this.entityId=entity.id;
-                //Jefe comunidad
-                this.cedula_jefe_comunidad=entity.jefe_comunidad.personal_caracterizacion.cedula;
-                this.jefe_comunidad=entity.jefe_comunidad;
-                this.form.jefe_comunidad_id=entity.jefe_comunidad.id;
                 //Jefe calle
                 this.cedula_jefe=entity.personal_caracterizacion.cedula;
                 this.form.personal_caraterizacion=entity.personal_caracterizacion;
@@ -190,12 +199,16 @@
                 this.form.telefono_secundario=entity.personal_caracterizacion.telefono_secundario;
                 this.form.partido_politico_id=entity.personal_caracterizacion.partido_politico_id;
                 this.form.movilizacion_id=entity.personal_caracterizacion.movilizacion_id;
-                //obtener calles
-                this.comunidades=entity.jefe_comunidad.comunidades;
-                this.form.comunidad_id=entity.jefe_comunidad.comunidad_id;
+                this.form.municipio_id=entity.calle?.comunidad?.centro_votacion?.parroquia?.municipio_id;
+                await this.getParroquias();
+                this.form.parroquia_id=entity.calle?.comunidad?.centro_votacion?.parroquia_id;
+                await this.getCentroVotacion();
+                this.form.centro_votacion_id=entity.calle?.comunidad?.centro_votacion_id;
+                await this.getComunidades();
+                this.form.comunidad_id=entity.calle?.comunidad_id;
                 await this.obtenerCalles();
-                //Calle
                 this.form.calle_id=entity.calle_id;
+                this.form.rol_equipo_politico_id=entity.roles_nivel_territorial?.roles_equipo_politico_id;
             },
             async suspend(entityId){
                 try {
@@ -227,13 +240,7 @@
             },
             async update(){
               //Validations
-                if(this.form.jefe_comunidad_id==null){
-                    swal({
-                        text:"Debe indicar el jefe de comunidad",
-                        icon:"error"
-                    });
-                    return false;
-                }else if(this.form.personal_caraterizacion==null){
+                if(this.form.personal_caraterizacion==null){
                     swal({
                         text:"Debe indicar el jefe de calle",
                         icon:"error"
@@ -245,9 +252,9 @@
                         icon:"error"
                     });
                     return false;
-                }else if(this.form.tipo_voto==""){
+                }else if(this.form.rol_equipo_politico_id==""){
                     swal({
-                        text:"Debe seleccionar un tipo de voto",
+                        text:"Debe seleccionar un rol",
                         icon:"error"
                     });
                     return false;
@@ -260,12 +267,6 @@
                 }else if(this.form.telefono_secundario==""){
                     swal({
                         text:"Debe ingresar un teléfono secundario",
-                        icon:"error"
-                    });
-                    return false;
-                }else if(this.form.partido_politico_id==""){
-                    swal({
-                        text:"Debe seleccionar un partido político",
                         icon:"error"
                     });
                     return false;
@@ -313,6 +314,9 @@
                 this.form.telefono_secundario="";
                 this.form.partido_politico_id=1;
                 this.form.movilizacion_id="";
+                this.form.municipio_id="0";
+                this.form.parroquia_id="0";
+                this.form.centro_votacion_id="0";
                 this.cedula_jefe="";
                 this.cedula_jefe_comunidad="";
                 this.cedula_jefe_comunidad_error="";
@@ -321,6 +325,11 @@
                 this.jefe_comunidad=null;
                 this.calles=[];
                 this.action="create";
+                this.parroquias=[];
+                this.centroVotaciones=[];
+                this.comunidades=[];
+                this.calles=[];
+                this.form.rol_equipo_politico_id="0";
             },
             async obtenerJefeComunidad() {
                 if(this.cedula_jefe_comunidad==""){

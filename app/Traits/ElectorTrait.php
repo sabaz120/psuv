@@ -114,12 +114,6 @@ trait ElectorTrait
                 $municipio = str_replace('MP.', '', substr($municipioSanitize, 18, strpos($municipioSanitize, '</td>') - 18));
                 $parroquia = str_replace('PQ.', '', substr($parroquiaSanitize, 14, strpos($parroquiaSanitize, '</td>') - 14));
                 $centro = substr($centroSanitize, 36, strpos($centroSanitize, '</font>') - 36);
-                \Log::info([
-                    trim($estado),
-                    trim($municipio),
-                    trim($parroquia),
-                    trim($centro),
-                ]);
                 $estado = $this->verifyOrCreateEstado(trim($estado));
                 $municipio = $this->verifyOrCreateMunicipio(trim($municipio), $estado->id);
                 $parroquia = $this->verifyOrCreateParroquia(trim($parroquia), $municipio->id);

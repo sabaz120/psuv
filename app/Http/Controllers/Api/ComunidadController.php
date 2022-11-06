@@ -13,14 +13,15 @@ class ComunidadController extends Controller
 {
     
     function comunidadesByParroquia($parroquia){
-
-        return response()->json(Comunidad::where("parroquia_id", $parroquia)->orderBy("nombre")->get());
-
+        $query=Comunidad::whereHas("centroVotacion",function($q)use($parroquia){
+            $q->where("parroquia_id",$parroquia);
+        })->orderBy("nombre")->get();
+        return response()->json($query);
     }
 
-    function verificarNombreDuplicado($nombre, $parroquia_id){
+    function verificarNombreDuplicado($nombre, $centro_votacion_id){
 
-        return Comunidad::where("parroquia_id", $parroquia_id)->where("nombre", strtoupper($nombre))->count();
+        return Comunidad::where("centro_votacion_id", $centro_votacion_id)->where("nombre", strtoupper($nombre))->count();
 
     }
 
@@ -28,12 +29,12 @@ class ComunidadController extends Controller
 
         try{    
 
-            if($this->verificarNombreDuplicado($request->nombre, $request->parroquia_id) > 0){
+            if($this->verificarNombreDuplicado($request->nombre, $request->centro_votacion_id) > 0){
                 return response()->json(["success" => false, "msg" => "Ésta comunidad ya existe"]);
             }
 
             $comunidad = new Comunidad;
-            $comunidad->parroquia_id = $request->parroquia_id;
+            $comunidad->centro_votacion_id = $request->centro_votacion_id;
             $comunidad->nombre = strtoupper($request->nombre);
             $comunidad->save();
 
@@ -51,12 +52,12 @@ class ComunidadController extends Controller
 
         try{    
 
-            if(Comunidad::where("parroquia_id", $request->parroquia_id)->where("nombre", strtoupper($request->nombre))->where("id", "<>", $request->id)->count() > 0){
+            if(Comunidad::where("centro_votacion_id", $request->centro_votacion_id)->where("nombre", strtoupper($request->nombre))->where("id", "<>", $request->id)->count() > 0){
                 return response()->json(["success" => false, "msg" => "Ésta comunidad ya existe"]);
             }
 
             $comunidad = Comunidad::find($request->id);
-            $comunidad->parroquia_id = $request->parroquia_id;
+            $comunidad->centro_votacion_id = $request->centro_votacion_id;
             $comunidad->nombre = strtoupper($request->nombre);
             $comunidad->update();
 
@@ -93,11 +94,14 @@ class ComunidadController extends Controller
 
     function fetch(Request $request){
 
-        $query = Comunidad::with("parroquia", "parroquia.municipio");
-        
+        $query = Comunidad::with("centroVotacion.parroquia.municipio");
+        $centro_votacion_id=$request->input("centro_votacion_id");
+        if($centro_votacion_id){
+            $query->where("centro_votacion_id",$centro_votacion_id);
+        }
         if(\Auth::user()->municipio_id != null){
             $municipio_id = \Auth::user()->municipio_id;
-            $query->whereHas("parroquia", function($q) use($municipio_id){
+            $query->whereHas("centroVotacion.parroquia", function($q) use($municipio_id){
                 $q->where('municipio_id', $municipio_id);
             });
         }
@@ -110,11 +114,12 @@ class ComunidadController extends Controller
 
     function search(Request $request){
 
-        $query = Comunidad::where('nombre', 'like', '%' . strtoupper($request->search) . '%')->with("parroquia", "parroquia.municipio");
+        $query = Comunidad::where('nombre', 'like', '%' . strtoupper($request->search) . '%')
+        ->with("centroVotacion.parroquia.municipio");
         
         if(\Auth::user()->municipio_id != null){
             $municipio_id = \Auth::user()->municipio_id;
-            $query->whereHas("parroquia", function($q) use($municipio_id){
+            $query->whereHas("centroVotacion.parroquia", function($q) use($municipio_id){
                 $q->where('municipio_id', $municipio_id);
             });
         }

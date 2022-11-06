@@ -98,10 +98,10 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="result in results">
-                                        <td>@{{ result.calle.comunidad.parroquia.municipio.nombre }}</td>
-                                        <td>@{{ result.calle.comunidad.nombre }}</td>
+                                        <td>@{{ result.calle.comunidad?.centro_votacion?.parroquia?.municipio?.nombre }}</td>
+                                        <td>@{{ result.calle.comunidad?.nombre }}</td>
                                         <td>@{{ result.calle.nombre }}</td>
-                                        <td>@{{ result.roles_nivel_territorial.roles_equipo_politico.nombre_rol }}</td>
+                                        <td>@{{ result.roles_nivel_territorial?.roles_equipo_politico?.nombre_rol }}</td>
                                         <td>@{{ result.personal_caracterizacion.cedula }}</td>
                                         <td>@{{ result.personal_caracterizacion.full_name }}</td>
                                         <td>@{{ result.personal_caracterizacion.telefono_principal }}</td>
