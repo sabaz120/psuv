@@ -13,7 +13,7 @@ class ComunidadController extends Controller
 {
     
     function comunidadesByCentroVotacion($centro_votacion_id){
-        $query=Comunidad::where("centro_votacion_id","centro_votacion_id")->orderBy("nombre")->get();
+        $query=Comunidad::where("centro_votacion_id",$centro_votacion_id)->orderBy("nombre")->get();
         return response()->json($query);
     }
 
