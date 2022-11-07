@@ -150,7 +150,7 @@ class UBCHController extends Controller
             $jefeUbch = JefeUbch::find($request->id);
             $jefeUbch->delete();
 
-            return response()->json(["success" => true, "msg" => "Jefe de UBCH eliminado"]);
+            return response()->json(["success" => true, "msg" => "Personal de UBCH eliminado"]);
 
         }
         catch(\Exception $e){
