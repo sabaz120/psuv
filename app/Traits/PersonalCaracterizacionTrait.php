@@ -9,10 +9,15 @@ trait PersonalCaracterizacionTrait
 {
     public function storePersonalCaracterizacion($data)
     {
-        $personalCaracterizacion = PersonalCaracterizacion::create($data->toArray());
-        $personalCaracterizacion->municipio_id = Elector::where("cedula", $personalCaracterizacion->cedula)->first()->municipio_id;
-        $personalCaracterizacion->parroquia_id = Elector::where("cedula", $personalCaracterizacion->cedula)->first()->parroquia_id;
-        $personalCaracterizacion->centro_votacion_id = Elector::where("cedula", $personalCaracterizacion->cedula)->first()->centro_votacion_id;
+        $data=$data->toArray();
+        if(!isset($data['nacionalidad'])){
+            $data['nacionalidad']="V";
+        }
+        $personalCaracterizacion = PersonalCaracterizacion::create($data);
+        $elector=Elector::where("cedula", $personalCaracterizacion->cedula)->first();
+        $personalCaracterizacion->municipio_id = $elector ? $elector->municipio_id : $personalCaracterizacion->municipio_id;
+        $personalCaracterizacion->parroquia_id = $elector ? $elector->parroquia_id : $personalCaracterizacion->parroquia_id;
+        $personalCaracterizacion->centro_votacion_id = $elector ? $elector->centro_votacion_id : $personalCaracterizacion->centro_votacion_id;
         $personalCaracterizacion->update();
 
         return $personalCaracterizacion;
@@ -24,7 +29,7 @@ trait PersonalCaracterizacionTrait
   
         $personal = PersonalCaracterizacion::find($id);
         $personal->cedula = $data->cedula;
-        $personal->nacionalidad = $data->nacionalidad;
+        $personal->nacionalidad = $data->nacionalidad??"V";
         $personal->primer_apellido = $data->primer_apellido;
         $personal->segundo_apellido = $data->segundo_apellido;
         $personal->primer_nombre = $data->primer_nombre;

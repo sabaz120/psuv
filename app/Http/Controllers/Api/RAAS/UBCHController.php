@@ -22,10 +22,9 @@ class UBCHController extends Controller
     use ElectorTrait;
 
     function searchByCedula(Request $request){
-
-        if($this->verificarDuplicidadCedula($request->cedula) > 0){
-            return response()->json(["success" => false, "msg" => "Esta cédula ya pertenece a un Jefe de UBCH"]);
-        }
+        // if($this->verificarDuplicidadCedula($request->cedula) > 0){
+        //     return response()->json(["success" => false, "msg" => "Esta cédula ya pertenece a un Jefe de UBCH"]);
+        // }
         
         $response = $this->searchPersonalCaracterizacionOrElector($request->cedula, $request->municipio_id);
         
@@ -37,9 +36,9 @@ class UBCHController extends Controller
 
         try{
 
-            if($this->verificarDuplicidadCedula($request->cedula) > 0){
-                return response()->json(["success" => false, "msg" => "Esta cédula ya pertenece a un Jefe de UBCH"]);
-            }
+            // if($this->verificarDuplicidadCedula($request->cedula) > 0){
+            //     return response()->json(["success" => false, "msg" => "Esta cédula ya pertenece a un Jefe de UBCH"]);
+            // }
 
             $personalCaracterizacion = PersonalCaracterizacion::where("cedula", $request->cedula)->first();
             
@@ -53,7 +52,7 @@ class UBCHController extends Controller
             }
 
             if($this->verificarUnSoloRolPorCentroVotacion($request->centro_votacion_id,$rolEquipoPolitico->rolNivelTerritorial->id) > 0){
-                return response()->json(["success" => false, "msg" => "Ya existe un jefe para ésta UBCH"]);
+                return response()->json(["success" => false, "msg" => "Esta cédula ya está asignada a un equipo de UBCH"]);
             }
 
             $jefeUbch = new JefeUbch;
@@ -163,12 +162,6 @@ class UBCHController extends Controller
 
         try{
 
-            $jefeComunidadCount = JefeComunidad::where("jefe_ubch_id", $request->id)->count();
-            
-            if($jefeComunidadCount > 0){
-                return response()->json(["success" => false, "msg" => "No se pudo eliminar el jefe de UBCH ya que tiene jefes de comunidad asociados"]);
-            }
-
             $jefeUbch = JefeUbch::find($request->id);
             $jefeUbch->delete();
 
@@ -188,7 +181,7 @@ class UBCHController extends Controller
 
         $query = JefeUbch::with(
             "centroVotacion", 
-            "centroVotacion.parroquia", 
+            "centroVotacion.parroquia.municipio", 
             "personalCaracterizacion", 
             "personalCaracterizacion.municipio", 
             "personalCaracterizacion.parroquia", 
@@ -215,7 +208,7 @@ class UBCHController extends Controller
         $cedula = $request->search;
         $query = JefeUbch::with(
             "centroVotacion", 
-            "centroVotacion.parroquia", 
+            "centroVotacion.parroquia.municipio", 
             "personalCaracterizacion", 
             "personalCaracterizacion.municipio", 
             "personalCaracterizacion.parroquia", 
