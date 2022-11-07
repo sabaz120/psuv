@@ -63,7 +63,7 @@ class UBCHController extends Controller
 
             $this->updatePersonalCaracterizacion($jefeUbch->personal_caracterizacion_id, $request);
 
-            return response()->json(["success" => true, "msg" => "Jefe de UBCH creado"]);
+            return response()->json(["success" => true, "msg" => "El personal de la ubch para el rol ".$rolEquipoPolitico->rolNivelTerritorial->nombre_rol." fue creado"]);
         }catch(\Exception $e){
 
             return response()->json(["success" => false, "msg" => "Ha ocurrido un problema", "err" => $e->getMessage()]);
@@ -117,39 +117,24 @@ class UBCHController extends Controller
     function update(UBCHUpdateRequest $request){
 
         try{
-            
-            /*if($this->verificarUnSoloCentroVotacionUpdate($request->centro_votacion_id, $request->id) > 0){
-                return response()->json(["success" => false, "msg" => "Ya existe otro jefe para ésta UBCH"]);
-            }*/
-
             $jefeUbch = JefeUbch::find($request->id);
-
             $personalCaracterizacion = PersonalCaracterizacion::where("cedula", $request->cedula)->first();
-            
             if($personalCaracterizacion == null){
                 $personalCaracterizacion = $this->storePersonalCaracterizacion($request);
             }
-    
             $rolEquipoPolitico=\App\Models\RolesEquipoPolitico::find($request->rol_equipo_politico_id);
             if(!$rolEquipoPolitico->rolNivelTerritorial){
                 return response()->json(["success" => false, "msg" => "El rol seleccionado no posee un nivel territorial configurado"]);
             }
-
             $jefeUbch->personal_caracterizacion_id = $personalCaracterizacion->id;
             $personalCaracterizacion = $this->updatePersonalCaracterizacion($jefeUbch->personal_caracterizacion_id, $request);
             $jefeUbch->roles_nivel_territorial_id=$rolEquipoPolitico->rolNivelTerritorial->id;
             $jefeUbch->update();
-
             return response()->json(["success" => true, "msg" => "Jefe de UBCH actualizado"]);
-
         }
         catch(\Exception $e){
-
             return response()->json(["success" => false, "msg" => "Ha ocurrido un problema", "err" => $e->getMessage(), "ln" => $e->getLine()]);
-
         }
-        
-
     }
 
     function verificarUnSoloCentroVotacionUpdate($centro_votacion, $jefeUbchId){
