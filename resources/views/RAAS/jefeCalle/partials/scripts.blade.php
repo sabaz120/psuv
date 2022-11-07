@@ -110,7 +110,11 @@
             },
             async getRolesEquiposPoliticos(){
                 this.loading=true;
-                let res = await axios.get("{{ url('/api/rol-equipo-politicos') }}")
+                let res = await axios.get("{{ url('/api/rol-equipo-politicos') }}",{
+                    params:{
+                        nivel_territorial_id:3
+                    }
+                })
                 this.rolesEquipoPoliticos = res.data
                 this.loading=false;
             },

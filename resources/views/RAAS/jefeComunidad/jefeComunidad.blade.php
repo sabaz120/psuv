@@ -255,7 +255,11 @@ const app = new Vue({
         },
         async getRolesEquiposPoliticos(){
             this.loading=true;
-            let res = await axios.get("{{ url('/api/rol-equipo-politicos') }}")
+            let res = await axios.get("{{ url('/api/rol-equipo-politicos') }}",{
+                params:{
+                    nivel_territorial_id:2
+                }
+            })
             this.rolesEquipoPoliticos = res.data
             this.loading=false;
         },
