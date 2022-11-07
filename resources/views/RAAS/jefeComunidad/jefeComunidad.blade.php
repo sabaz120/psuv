@@ -430,7 +430,7 @@ const app = new Vue({
             this.segundoNombre = elector.segundo_nombre == "null" || elector.segundo_nombre == null ? "" : elector.segundo_nombre
             this.primerApellido = elector.primer_apellido
             this.segundoApellido = elector.segundo_apellido == "null" || elector.segundo_apellido == null ? "" : elector.segundo_apellido
-            this.sexo = elector.sexo
+            this.sexo = elector.sexo??"masculino"
             this.selectedPartidoPolitico = elector.partido_politico_id??1
             this.selectedMovilizacion = elector.movilizacion_id??""
 

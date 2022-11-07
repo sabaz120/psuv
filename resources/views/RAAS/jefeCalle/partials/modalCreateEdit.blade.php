@@ -120,6 +120,19 @@
                             </div>
                         </div>
 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="movilizacion">Tipo de movilización</label>
+                                <select class="form-control" v-model="form.movilizacion_id" v-if="form.personal_caraterizacion">
+                                    <option value="" selected>Seleccione</option>
+                                    <option :value="movilizacion.id" v-for="movilizacion in tiposDeMovilizacion">@{{ movilizacion.nombre }}</option>
+                                </select>
+                                <select class="form-control" v-else disabled>
+                                    <option value="" selected>Seleccione</option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
                 </div>                    
             </div>
