@@ -570,9 +570,6 @@ const app = new Vue({
                     }
                 }
             })
-
-
-
         },
         async getEstados(){
             this.selectedMunicipio = ""

@@ -6,8 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Comunidad\ComunidadStoreRequest;
 use App\Http\Requests\Comunidad\ComunidadUpdateRequest;
-use App\Models\Calle;
-use App\Models\Comunidad;
+use App\Models\{
+    Calle,
+    Comunidad,
+    JefeComunidad,
+    JefeCalle
+};
 
 class ComunidadController extends Controller
 {
@@ -77,6 +81,15 @@ class ComunidadController extends Controller
                 return response()->json(["success" => false, "msg" => "No es posible eliminar debido a que hay calles asociadas"]);
             }
 
+            if(JefeComunidad::where("comunidad_id", $request->id)->count() > 0){
+                return response()->json(["success" => false, "msg" => "No es posible eliminar debido a que hay jefes de comunidad asociados"]);
+            }
+            $jefesCalle=JefeCalle::whereHas("calle",function($q)use($request){
+                $q->where("comunidad_id", $request->id);
+            })->count();
+            if($jefesCalle > 0){
+                return response()->json(["success" => false, "msg" => "No es posible eliminar debido a que hay jefes de calle asociados"]);
+            }
             $comunidad = Comunidad::find($request->id);
             $comunidad->delete();
 

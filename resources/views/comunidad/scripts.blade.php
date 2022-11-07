@@ -44,7 +44,7 @@
                 this.selectedId = ""
                 this.action = "create"
                 this.modalTitle = "Crear comunidad",
-                this.selecteMunicipio = ""
+                this.selectedMunicipio = ""
                 this.selectedParroquia = ""
                 this.selectedCentroVotacion = ""
                 this.nombre=""
@@ -214,43 +214,41 @@
 
             },
             async remove(id){
-
-                try{
-
-                    let res = await axios.post("{{ url('api/comunidad/delete') }}", {id: id})
-
-                    if(res.data.success == true){
-
-                        swal({
-                            text:res.data.msg,
-                            icon: "success"
-                        })
-
-                        this.fetch(this.page)
-
-                    }else{
-                
-                        swal({
-                            text:res.data.msg,
-                            icon: "error"
-                        })
-
+                Swal.fire({
+                title: '¿Estás seguro de eliminar este registro?',
+                text: "No podrás revertirlo",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, eliminar',
+                cancelButtonText: 'Cancelar',
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        try{
+                            let res = await axios.post("{{ url('api/comunidad/delete') }}", {id: id})
+                            if(res.data.success == true){
+                                swal({
+                                    text:res.data.msg,
+                                    icon: "success"
+                                })
+                                this.fetch(this.page)
+                            }else{
+                                swal({
+                                    text:res.data.msg,
+                                    icon: "error"
+                                })
+                            }
+                        }catch(err){
+                            swal({
+                                text:"Hay algunos campos que debes revisar",
+                                icon: "error"
+                            })
+                            this.errors = err.response.data.errors
+                        }
                     }
-
-                }catch(err){
-        
-                    swal({
-                        text:"Hay algunos campos que debes revisar",
-                        icon: "error"
-                    })
-
-                    this.errors = err.response.data.errors
-
-                }
-
-
+                })
             },
-            
             async getMunicipios(){
 
                 this.selectedParroquia = ""
