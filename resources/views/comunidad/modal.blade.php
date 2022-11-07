@@ -11,11 +11,10 @@
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="row">
-
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="municipio">Municipio</label>
-                                <select class="form-control" v-model="selectedMunicipio" id="municipio" @change="getParroquias()" :disabled="authMunicipio != ''">
+                                <select class="form-control" v-model="selectedMunicipio" id="municipio" @change="getParroquias()" :disabled="( action === 'edit' || authMunicipio != '')">
                                     <option value="">Seleccione</option>
                                     <option :value="municipio.id" v-for="municipio in municipios">@{{ municipio.nombre }}</option>
                                 </select>
@@ -25,7 +24,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="parroquia">Parroquia</label>
-                                <select class="form-control" v-model="selectedParroquia" id="parroquia" @change="getCentroVotacion()">
+                                <select class="form-control" v-model="selectedParroquia" id="parroquia" @change="getCentroVotacion()" :disabled="action === 'edit'">
                                     <option value="">Seleccione</option>
                                     <option :value="parroquia.id" v-for="parroquia in parroquias">@{{ parroquia.nombre }}</option>
                                 </select>
@@ -36,7 +35,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="centroVotacion">UBCH</label>
-                                <select class="form-control" v-model="selectedCentroVotacion" id="centroVotacion">
+                                <select class="form-control" v-model="selectedCentroVotacion" id="centroVotacion" :disabled="action === 'edit'">
                                     <option value="">Seleccione</option>
                                     <option :value="centroVotacion.id" v-for="centroVotacion in centroVotaciones">@{{ centroVotacion.nombre }}</option>
                                 </select>
