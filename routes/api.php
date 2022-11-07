@@ -177,7 +177,7 @@ Route::get("parroquias", [ParroquiaController::class, "index"]);
 Route::get("parroquias/{municipio_id}", [ParroquiaController::class, "parroquiasByMunicipio"]);
 Route::get("parroquias-busqueda/{municipio_nombre}", [ParroquiaController::class, "parroquiasByMunicipioNombre"]);
 
-Route::get("comunidades/{parroquia}", [ComunidadController::class, "comunidadesByParroquia"]);
+Route::get("comunidades/{centro_votacion_id}", [ComunidadController::class, "comunidadesByCentroVotacion"]);
 
 Route::get("centro-votacion/", [CentroVotacionController::class, "index"])->name("api.centros.votacion.index");
 Route::get("centro-votacion/{parroquia_id}", [CentroVotacionController::class, "centroVotacionByParroquia"]);

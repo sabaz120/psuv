@@ -12,10 +12,8 @@ use App\Models\Comunidad;
 class ComunidadController extends Controller
 {
     
-    function comunidadesByParroquia($parroquia){
-        $query=Comunidad::whereHas("centroVotacion",function($q)use($parroquia){
-            $q->where("parroquia_id",$parroquia);
-        })->orderBy("nombre")->get();
+    function comunidadesByCentroVotacion($centro_votacion_id){
+        $query=Comunidad::where("centro_votacion_id","centro_votacion_id")->orderBy("nombre")->get();
         return response()->json($query);
     }
 
