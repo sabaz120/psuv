@@ -157,16 +157,13 @@ const app = new Vue({
     el: '#dev-jefe-comunidad',
     data() {
         return {
-
             linkClass:"page-link",
             activeLinkClass:"page-link active-link bg-main",
             readonlyComunidad:false,
-
             cedulaJefeUBCH:"",
             nombreJefeUBCH:"",
             selectedUBCH:"",
             cedulaSearch:"",
-
             readonlyCentroVotacion:false,
             readonlyCedula:false,
             cedulaSearching:false,
@@ -176,13 +173,10 @@ const app = new Vue({
             storeLoader:false,
             updateLoader:false,
             suspendLoader:false,
-
             selectedId:"",
             action:"create",
             errors:[],
             loading:false,
-
- 
             selectedParroquia:"",
             selectedCentroVotacion:"",
             partidosPoliticos:[],
@@ -193,7 +187,6 @@ const app = new Vue({
             jefesComunidad:[],
             comunidades:[],
             selectedComunidad:"",
-
             cedula:"",
             nombre:"",
             telefonoPrincipal:"",
@@ -206,7 +199,6 @@ const app = new Vue({
             primerApellido:"",
             segundoApellido:"",
             sexo:"",
-
             modalTitle:"Crear Jefe de Comunidad",
             currentPage:1,
             links:"",
@@ -587,48 +579,63 @@ const app = new Vue({
 
         },
         async remove(id){
-
-            try{
-                
-                this.errors = []
-
-                let res = await axios.post("{{ url('api/raas/jefe-comunidad/suspend') }}", {id: id})
-
-                if(res.data.success == true){
-
-                    swal({
-                        text:res.data.msg,
-                        icon: "success"
-                    })
-
-                    this.fetch(this.page)
-
-                }else{
-                  
-                    swal({
-                        text:res.data.msg,
-                        icon: "error"
-                    })
-
+            Swal.fire({
+                title: '¿Estás seguro de eliminar este registro?',
+                text: "No podrás revertirlo",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, eliminar',
+                cancelButtonText: 'Cancelar',
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+    
+                    try{
+                        
+                        this.errors = []
+        
+                        let res = await axios.post("{{ url('api/raas/jefe-comunidad/suspend') }}", {id: id})
+        
+                        if(res.data.success == true){
+        
+                            swal({
+                                text:res.data.msg,
+                                icon: "success"
+                            })
+        
+                            this.fetch(this.page)
+        
+                        }else{
+                          
+                            swal({
+                                text:res.data.msg,
+                                icon: "error"
+                            })
+        
+                        }
+        
+                    }catch(err){
+                    
+                        swal({
+                            text:"Hay algunos campos que debes revisar",
+                            icon: "error"
+                        })
+        
+                        this.errors = err.response.data.errors
+        
+                    }
                 }
-
-            }catch(err){
-            
-                swal({
-                    text:"Hay algunos campos que debes revisar",
-                    icon: "error"
-                })
-
-                this.errors = err.response.data.errors
-
-            }
+            })
        
 
         },
         async getComunidades(){
             this.loading=true;
             let res = await axios.get("{{ url('/api/comunidades') }}",{
-                "centro_votacion_id":this.selectedCentroVotacion
+                params:{
+                    "centro_votacion_id":this.selectedCentroVotacion
+                }
             })
             this.comunidades = res.data.data
             this.loading=false;

@@ -198,7 +198,7 @@ class JefeComunidadController extends Controller
             $jefeComunidad = JefeComunidad::find($request->id);
             $jefeComunidad->delete();
 
-            return response()->json(["success" => true, "msg" => "Jefe de Comunidad eliminado"]);
+            return response()->json(["success" => true, "msg" => "Personal de comunidad eliminado"]);
 
         }
         catch(\Exception $e){
