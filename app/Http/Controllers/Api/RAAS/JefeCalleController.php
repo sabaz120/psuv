@@ -222,7 +222,7 @@ class JefeCalleController extends Controller
             //Create entity
             $entity->delete();
             DB::commit();
-            $response = $this->getSuccessResponse($entity,"Eliminación exitosa");
+            $response = $this->getSuccessResponse($entity,"Personal de calle eliminado");
         } catch (\Exception $e) {
             DB::rollBack();
             $code = $this->getCleanCode($e);

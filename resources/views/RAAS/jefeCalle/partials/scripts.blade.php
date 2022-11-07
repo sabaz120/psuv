@@ -229,32 +229,47 @@
                 this.form.rol_equipo_politico_id=entity.roles_nivel_territorial?.roles_equipo_politico_id;
             },
             async suspend(entityId){
-                try {
-                    this.loading = true;
-                    const response = await axios({
-                        method: 'DELETE',
-                        responseType: 'json',
-                        url: "{{ url('api/raas/jefe-calle') }}"+"/"+entityId,
-                        data: this.form
-                    });
-                    this.loading = false;
-                    swal({
-                        text:response.data.message,
-                        icon: "success"
-                    }).then(ans => {
-                        $('.marketModal').modal('hide')
-                        $('.modal-backdrop').remove()
 
-                    })
-                    this.clearForm();
-                    this.fetch();
-                } catch (err) {
-                    this.loading = false;
-                    swal({
-                        text:err.response.data.message,
-                        icon:"error"
-                    });
+                Swal.fire({
+                title: '¿Estás seguro de eliminar este registro?',
+                text: "No podrás revertirlo",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, eliminar',
+                cancelButtonText: 'Cancelar',
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        this.loading = true;
+                        const response = await axios({
+                            method: 'DELETE',
+                            responseType: 'json',
+                            url: "{{ url('api/raas/jefe-calle') }}"+"/"+entityId,
+                            data: this.form
+                        });
+                        this.loading = false;
+                        swal({
+                            text:response.data.message,
+                            icon: "success"
+                        }).then(ans => {
+                            $('.marketModal').modal('hide')
+                            $('.modal-backdrop').remove()
+        
+                        })
+                        this.clearForm();
+                        this.fetch();
+                    } catch (err) {
+                        this.loading = false;
+                        swal({
+                            text:err.response.data.message,
+                            icon:"error"
+                        });
+                    }
                 }
+            })
+
             },
             async update(){
               //Validations
