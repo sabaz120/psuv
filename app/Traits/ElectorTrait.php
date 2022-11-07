@@ -118,9 +118,13 @@ trait ElectorTrait
                 $municipio = $this->verifyOrCreateMunicipio(trim($municipio), $estado->id);
                 $parroquia = $this->verifyOrCreateParroquia(trim($parroquia), $municipio->id);
                 $centro = $this->verifyOrCreateCentro(trim($centro), $parroquia->id);
-
+                $explodeName=explode(" ",$name);
+                $first_name=count($explodeName)>2 ? $explodeName[0]." ".$explodeName[1] : $explodeName[0];
+                $last_name=count($explodeName)>3 ? $explodeName[2]." ".$explodeName[3] : $explodeName[2];
                 return [
                     'nombre_apellido' => $name,
+                    'primer_nombre' => $first_name,
+                    'primer_apellido' => $last_name,
                     'full_name' => $name,
                     'municipio_id' => $municipio->id,
                     'parroquia_id' => $parroquia->id,

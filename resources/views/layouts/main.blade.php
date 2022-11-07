@@ -17,6 +17,7 @@ License: You must have a valid license purchased only from themeforest(the above
 	<!--begin::Head-->
 	<head><base href="../../../">
 		<meta charset="utf-8" />
+		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<title>SIBE - PSUV</title>
 		<link rel="shortcut icon" type="image/x-icon" href="{{ url('fian.png') }}">
 		<meta name="description" content="User datatable listing" />

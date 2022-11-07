@@ -150,7 +150,6 @@
 @endsection
 
 @push("scripts")
-
 <script type="text/javascript">
 
 var sync = false;
@@ -227,12 +226,16 @@ const app = new Vue({
             this.selectedId = ""
             this.action = "create"
             this.modalTitle = "Crear Jefe de UBCH",
-            this.selecteMunicipio = ""
+            this.selectedMunicipio = ""
             this.selectedEstado=""
             this.selectedParroquia = ""
             this.selectedCentroVotacion = ""
             this.selectedPartidoPolitico = ""
             this.selectedMovilizacion = "",
+            this.selectedRolEquipoPolitico="";
+            this.municipios=[];
+            this.parroquias=[];
+            this.centroVotaciones=[];
             this.cedula=""
             this.nombre=""
             this.telefonoPrincipal=""
@@ -264,15 +267,16 @@ const app = new Vue({
             this.readonlyCentroVotacion = true
             
             this.nombre = elector.full_name
-            this.selectedEstado = elector.estado_id
+            this.selectedEstado = jefeUbch.estado_id
+            this.selectedEstado = jefeUbch.centro_votacion?.parroquia?.municipio?.estado_id
             await this.getMunicipios()
-            this.selectedMunicipio = jefeUbch.centro_votacion.parroquia.municipio_id
+            this.selectedMunicipio = jefeUbch.centro_votacion?.parroquia?.municipio_id
             await this.getParroquias()
 
-            this.selectedParroquia = jefeUbch.centro_votacion.parroquia_id
+            this.selectedParroquia = jefeUbch.centro_votacion?.parroquia_id
             await this.getCentroVotacion()
 
-            this.selectedCentroVotacion = jefeUbch.centro_votacion.id
+            this.selectedCentroVotacion = jefeUbch.centro_votacion_id
 
             this.telefonoPrincipal = elector.telefono_principal
             this.telefonoSecundario = elector.telefono_secundario
@@ -300,7 +304,6 @@ const app = new Vue({
             this.create()
         },
         async searchCedula(){
-
             if(this.cedula == ""){
                 swal({
                     text:"Debes ingresar una cédula",
@@ -311,15 +314,11 @@ const app = new Vue({
 
                 return
             }
-
             this.cedulaSearching = true
             try{
-                const csrf_token="{{ csrf_token() }}";
+                axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+                axios.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name="csrf-token"]').attr('content');
                 let res = await axios.post("{{ url('raas/ubch/search-by-cedula') }}", {
-                    headers:{
-                        'X-CSRF-TOKEN': csrf_token
-                    },
-                    _token:csrf_token,
                     cedula: this.cedula, municipio_id: "{{ \Auth::user()->municipio_id }}"
                 })
                 if(res.data.success == false){
@@ -345,6 +344,7 @@ const app = new Vue({
                     }
                 }
             }catch(err){
+                console.log(err.response)
                 swal({
                         text:"Ocurrió un error al consultar la cédula",
                         icon:"error"
@@ -382,9 +382,7 @@ const app = new Vue({
 
         },  
         async setElectorDataEdit(elector){
-
             this.nombre = elector.full_name
-
             this.telefonoPrincipal = elector.telefono_principal
             this.telefonoSecundario = elector.telefono_secundario
             this.fechaNacimiento = elector.fecha_nacimiento
@@ -401,9 +399,9 @@ const app = new Vue({
             this.segundoNombre = elector.segundo_nombre == "null" || elector.segundo_nombre == null ? "" : elector.segundo_nombre
             this.primerApellido = elector.primer_apellido
             this.segundoApellido = elector.segundo_apellido == "null" || elector.segundo_apellido == null ? "" : elector.segundo_apellido
-            this.sexo = elector.sexo
+            this.sexo = elector.sexo??"masculino"
             this.selectedPartidoPolitico = elector.partido_politico_id
-            this.selectedMovilizacion = elector.movilizacion_id
+            this.selectedMovilizacion = elector.movilizacion_id??""
         },  
         
         async fetch(link = ""){
@@ -417,12 +415,9 @@ const app = new Vue({
 
         },
         async store(){
-
             try{
-                
                 this.errors = []
                 this.storeLoader = true
-
                 let res = await axios.post("{{ url('api/raas/ubch/store') }}", {
                     cedula: this.cedula, 
                     nacionalidad: this.nacionalidad, 
@@ -443,11 +438,8 @@ const app = new Vue({
                     fecha_nacimiento: this.fechaNacimiento,
                     rol_equipo_politico_id:this.selectedRolEquipoPolitico
                 })
-                
                 this.storeLoader = false
-
                 if(res.data.success == true){
-
                     swal({
                         text:res.data.msg,
                         icon: "success"
@@ -455,30 +447,21 @@ const app = new Vue({
 
                         $('.marketModal').modal('hide')
                         $('.modal-backdrop').remove()
-                      
-
                     })
-
                     this.fetch(this.page)
-
                 }else{
-
                     swal({
                         text:res.data.msg,
                         icon: "error"
                     })
-
                 }
-
             }catch(err){
                 this.storeLoader = false
                 swal({
                     text:"Hay algunos campos que debes revisar",
                     icon: "error"
                 })
-
                 this.errors = err.response.data.errors
-
             }
             this.storeLoader = false
 
