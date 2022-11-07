@@ -85,7 +85,7 @@ class JefeComunidadController extends Controller
             ->where("roles_nivel_territorial_id",$rolEquipoPolitico->rolNivelTerritorial->id)
             ->count();
             if(($jefeComunidad) > 0){
-                return response()->json(["success" => false, "msg" => "Esta comunidad ya posee un Jefe"]);
+                return response()->json(["success" => false, "msg" => "Esta cédula ya está asignada a un equipo de comunidad"]);
             }
             $jefeComunidad = new JefeComunidad;
             $jefeComunidad->personal_caracterizacion_id = $personalCaracterizacion->id;
@@ -162,7 +162,7 @@ class JefeComunidadController extends Controller
             }
             $jefeComunidadExist=JefeComunidad::where("comunidad_id", $request->comunidad)
             ->where("roles_nivel_territorial_id",$rolEquipoPolitico->rolNivelTerritorial->id)
-            ->where("personal_caracterizacion_id","!=",$personalCaracterizacion->id)
+            ->where("id","!=",$request->id)
             ->count();
             if(($jefeComunidadExist) > 0){
                 return response()->json(["success" => false, "msg" => "Esta comunidad ya posee un Jefe"]);
@@ -189,11 +189,11 @@ class JefeComunidadController extends Controller
 
         try{
 
-            $jefeComunidadCount = JefeCalle::where("jefe_comunidad_id", $request->id)->count();
+            // $jefeComunidadCount = JefeCalle::where("jefe_comunidad_id", $request->id)->count();
             
-            if($jefeComunidadCount > 0){
-                return response()->json(["success" => false, "msg" => "No se pudo eliminar el jefe de Comunidad ya que tiene jefes de calle asociados"]);
-            }
+            // if($jefeComunidadCount > 0){
+            //     return response()->json(["success" => false, "msg" => "No se pudo eliminar el jefe de Comunidad ya que tiene jefes de calle asociados"]);
+            // }
 
             $jefeComunidad = JefeComunidad::find($request->id);
             $jefeComunidad->delete();

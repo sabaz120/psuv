@@ -82,6 +82,13 @@
             },
             async getParroquias(){
                 this.loading=true;
+                this.form.parroquia_id="0";
+                this.form.centro_votacion_id="0";
+                this.form.comunidad_id="0";
+                this.form.calle_id="0";
+                this.centroVotaciones=[];
+                this.comunidades=[];
+                this.calles=[];
                 let res = await axios.get("{{ url('/api/parroquias') }}",{
                     params:{
                         municipio_id:this.form.municipio_id
@@ -92,7 +99,11 @@
             },
             async getCentroVotacion(){
                 this.loading=true;
-                this.selectedCentroVotacion = ""
+                this.form.centro_votacion_id="0";
+                this.form.comunidad_id="0";
+                this.form.calle_id="0";
+                this.comunidades=[];
+                this.calles=[];
                 let res = await axios.get("{{ url('/api/centro-votacion') }}"+"/"+this.form.parroquia_id)
                 this.centroVotaciones = res.data
                 this.loading=false;
@@ -105,6 +116,9 @@
             },
             async getComunidades(){
                 this.loading=true;
+                this.form.comunidad_id="0";
+                this.form.calle_id="0";
+                this.calles=[];
                 let res = await axios.get("{{ url('/api/comunidades') }}"+"/"+this.form.centro_votacion_id)
                 this.comunidades = res.data
                 this.loading=false;
@@ -405,9 +419,13 @@
                         if(response.data.elector.movilizacion_id){
                             this.form.movilizacion_id=response.data.elector.movilizacion_id;
                         }
+                        if(response.data.elector.telefono_principal){
+                            this.form.telefono_principal=response.data.elector.telefono_principal;
+                        }
+                        if(response.data.elector.telefono_secundario){
+                            this.form.telefono_secundario=response.data.elector.telefono_secundario;
+                        }
                     }else{
-
-                        
                         this.form.personal_caraterizacion=null;
                         this.cedula_jefe_error="Elector no encontrado";
                         if(response.data.success == false){
@@ -427,11 +445,12 @@
             async obtenerCalles() {
                 try {
                     if(this.form.comunidad_id=="0"){
-                        swal({
-                            text:"Debe seleccionar una comunidad",
-                            icon:"error"
-                        });
+                        // swal({
+                        //     text:"Debe seleccionar una comunidad",
+                        //     icon:"error"
+                        // });
                         this.calles=[];
+                        return;
                     }
                     this.loading = true;
                     let filters = {

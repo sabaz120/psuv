@@ -82,39 +82,29 @@ class JefeCalleController extends Controller
             $elector=PersonalCaracterizacion::whereCedula($data['personal_caraterizacion']['cedula'])->first();
             if(!$elector){
                 $elector=Elector::whereCedula($data['personal_caraterizacion']['cedula'])->first();
-                if(!$elector){
-                    throw new \Exception('Elector jefe de calle no encontrado.', 404);
-                }else{
-                    //Create
-                    $elector=PersonalCaracterizacion::create([
-                        "cedula"=>$elector->cedula,
-                        "nacionalidad"=>$elector->nacionalidad,
-                        "primer_apellido"=>$elector->primer_apellido,
-                        "segundo_apellido"=>$elector->segundo_apellido,
-                        "primer_nombre"=>$elector->primer_nombre,
-                        "segundo_nombre"=>$elector->segundo_nombre,
-                        "sexo"=>$elector->sexo,
-                        "fecha_nacimiento"=>$elector->fecha_nacimiento,
-                        "estado_id"=>$elector->estado_id,
-                        "municipio_id"=>$elector->municipio_id,
-                        "parroquia_id"=>$elector->parroquia_id,
-                        "centro_votacion_id"=>$elector->centro_votacion_id,
-                        "telefono_principal"=>$request->telefono_principal,
-                        "telefono_secundario"=>$request->telefono_secundario,
-                        "tipo_voto"=>$request->tipo_voto,
-                        "partido_politico_id"=>$request->partido_politico_id,
-                        "movilizacion_id"=>$request->movilizacion_id,
-                    ]);
-                    $data['personal_caraterizacion_id']=$elector->id;
-                }   
+                //Create
+                $elector=PersonalCaracterizacion::create([
+                    "cedula"=>$elector->cedula??$data['personal_caraterizacion']["cedula"],
+                    "nacionalidad"=>$elector->nacionalidad??$data['personal_caraterizacion']["nacionalidad"],
+                    "primer_apellido"=>$elector->primer_apellido??$data['personal_caraterizacion']["primer_apellido"],
+                    "segundo_apellido"=>$elector->segundo_apellido??"",
+                    "primer_nombre"=>$elector->primer_nombre??$data['personal_caraterizacion']["primer_nombre"],
+                    "segundo_nombre"=>$elector->segundo_nombre??"",
+                    "sexo"=>$elector->sexo??$data['personal_caraterizacion']["sexo"],
+                    "fecha_nacimiento"=>$elector->fecha_nacimiento??\Carbon\Carbon::now()->format("Y-m-d"),
+                    "estado_id"=>$elector->estado_id??$data['personal_caraterizacion']["estado_id"],
+                    "municipio_id"=>$elector->municipio_id??$data['personal_caraterizacion']["municipio_id"],
+                    "parroquia_id"=>$elector->parroquia_id??$data['personal_caraterizacion']["parroquia_id"],
+                    "centro_votacion_id"=>$elector->centro_votacion_id??$data['personal_caraterizacion']["centro_votacion_id"],
+                    "telefono_principal"=>$request->telefono_principal,
+                    "telefono_secundario"=>$request->telefono_secundario,
+                    "tipo_voto"=>$request->tipo_voto,
+                    "partido_politico_id"=>$request->partido_politico_id,
+                    "movilizacion_id"=>$request->movilizacion_id,
+                ]);
+                $data['personal_caraterizacion_id']=$elector->id;
             }else{
                 $data['personal_caraterizacion_id']=$elector->id;
-            }
-            //
-            $exist=Model::where('personal_caraterizacion_id',$elector->id)
-            ->where("calle_id",$data['calle_id'])->first();
-            if($exist){
-                throw new \Exception('Este elector ya ha sido registrado como jefe de esta calle.', 404);
             }
             $rolEquipoPolitico=\App\Models\RolesEquipoPolitico::find($request->rol_equipo_politico_id);
             if(!$rolEquipoPolitico->rolNivelTerritorial){
@@ -159,23 +149,23 @@ class JefeCalleController extends Controller
             $elector=PersonalCaracterizacion::whereCedula($data['personal_caraterizacion']->cedula)->first();
             if(!$elector){
                 $elector=Elector::whereCedula($data['personal_caraterizacion']->cedula)->first();
-                if(!$elector){
-                    throw new \Exception('Elector jefe de calle no encontrado.', 404);
-                }else{
+                //if(!$elector){
+                 //   throw new \Exception('Elector jefe de calle no encontrado.', 404);
+                //}else{
                     //Create
                     $elector=PersonalCaracterizacion::create([
-                        "cedula"=>$elector->cedula,
-                        "nacionalidad"=>$elector->nacionalidad,
-                        "primer_apellido"=>$elector->primer_apellido,
-                        "segundo_apellido"=>$elector->segundo_apellido,
-                        "primer_nombre"=>$elector->primer_nombre,
-                        "segundo_nombre"=>$elector->segundo_nombre,
-                        "sexo"=>$elector->sexo,
-                        "fecha_nacimiento"=>$elector->fecha_nacimiento,
-                        "estado_id"=>$elector->estado_id,
-                        "municipio_id"=>$elector->municipio_id,
-                        "parroquia_id"=>$elector->parroquia_id,
-                        "centro_votacion_id"=>$elector->centro_votacion_id,
+                        "cedula"=>$elector->cedula??$data['personal_caraterizacion']->cedula,
+                        "nacionalidad"=>$elector->nacionalidad??$data['personal_caraterizacion']->nacionalidad,
+                        "primer_apellido"=>$elector->primer_apellido??$data['personal_caraterizacion']->primer_apellido,
+                        "segundo_apellido"=>$elector->segundo_apellido??"",
+                        "primer_nombre"=>$elector->primer_nombre??$data['personal_caraterizacion']->primer_nombre,
+                        "segundo_nombre"=>$elector->segundo_nombre??"",
+                        "sexo"=>$elector->sexo??$data['personal_caraterizacion']->sexo,
+                        "fecha_nacimiento"=>$elector->fecha_nacimiento??\Carbon\Carbon::now()->format("Y-m-d"),
+                        "estado_id"=>$elector->estado_id??$data['personal_caraterizacion']->estado_id,
+                        "municipio_id"=>$elector->municipio_id??$data['personal_caraterizacion']->municipio_id,
+                        "parroquia_id"=>$elector->parroquia_id??$data['personal_caraterizacion']->parroquia_id,
+                        "centro_votacion_id"=>$elector->centro_votacion_id??$data['personal_caraterizacion']->centro_votacion_id,
                         "telefono_principal"=>$request->telefono_principal,
                         "telefono_secundario"=>$request->telefono_secundario,
                         "tipo_voto"=>$request->tipo_voto,
@@ -183,7 +173,7 @@ class JefeCalleController extends Controller
                         "movilizacion_id"=>$request->movilizacion_id,
                     ]);
                     $data['personal_caraterizacion_id']=$elector->id;
-                }   
+                //}   
             }else{
                 $data['personal_caraterizacion_id']=$elector->id;
                 PersonalCaracterizacion::whereCedula($data['personal_caraterizacion']->cedula)->update([

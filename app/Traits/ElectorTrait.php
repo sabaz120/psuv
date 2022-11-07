@@ -123,6 +123,9 @@ trait ElectorTrait
                 $last_name=count($explodeName)>3 ? $explodeName[2]." ".$explodeName[3] : $explodeName[2];
                 return [
                     'nombre_apellido' => $name,
+                    'cedula' => $cedula,
+                    'nacionalidad' => $nacionalidad,
+                    'sexo' => "masculino",
                     'primer_nombre' => $first_name,
                     'primer_apellido' => $last_name,
                     'full_name' => $name,

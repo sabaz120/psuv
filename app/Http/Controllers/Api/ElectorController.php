@@ -8,10 +8,11 @@ use Illuminate\Http\Request;
 use App\Models\Elector;
 use App\Models\JefeFamilia;
 use App\Models\PersonalCaracterizacion;
-
+use App\Traits\ElectorTrait;
 class ElectorController extends Controller
 {
-    
+    use ElectorTrait;
+   
     function searchByCedula(Request $request){
         $hasJefeFamilia=$request->input('has_jefe_familia');
         $response=[
@@ -30,12 +31,17 @@ class ElectorController extends Controller
                 }
                 return response()->json($response);
             }
-
             $elector = $this->searchElectorByCedula($request->cedula);
             if($elector){
                 $response["elector"]=$elector;
                 return response()->json($response);
             }
+            $elector = $this->searchInCNE($request->cedula);
+            if ($elector) {
+                $response["elector"]=$elector;
+                return response()->json($response);
+            }
+            dd($elector);
             $response["success"]=false;
             $response["msg"]="Elector no encontrado";
             return response()->json($response);
@@ -67,6 +73,17 @@ class ElectorController extends Controller
                     return response()->json($response);
                 }
              
+                $response["elector"]=$elector;
+                return response()->json($response);
+            }
+            $elector = $this->searchInCNE($request->cedula);
+            if ($elector) {
+                $elector=(object)$elector;
+                if($elector->municipio_id != \Auth::user()->municipio_id){
+                    $response["success"]=false;
+                    $response["msg"]="Éste elector no pertence a tu municipio";
+                    return response()->json($response);
+                }
                 $response["elector"]=$elector;
                 return response()->json($response);
             }
