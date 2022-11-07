@@ -217,7 +217,6 @@ const app = new Vue({
         }
     },
     methods: {
-
         async getRolesEquiposPoliticos(){
             let res = await axios.get("{{ url('/api/rol-equipo-politicos') }}",{
                 params:{
@@ -313,9 +312,7 @@ const app = new Vue({
                     text:"Debes ingresar una cédula",
                     icon:"error"
                 })
-
                 this.cedula = ""
-
                 return
             }
             this.cedulaSearching = true
@@ -327,23 +324,24 @@ const app = new Vue({
                 })
                 if(res.data.success == false){
                     this.readonlyCedula = false
+                    if(this.action != 'edit')
                     this.create()
+                    this.cedula="";
                     swal({
                         text:res.data.msg,
                         icon:"error"
                     })
                 }
                 else{
-                    await this.getEstados()
                     if(this.action == "edit"){
                         await this.setElectorDataEdit(res.data.elector)
-
                         this.readonlyEstado=true;
                         this.readonlyMunicipio=true;
                         this.readonlyParroquia=true;
                         this.readonlyCentroVotacion=true;
                         this.readonlyRolEquipoPolitico=true;
                     }else{
+                        await this.getEstados()
                         this.setElectorData(res.data.elector)
                     }
                 }
@@ -391,13 +389,13 @@ const app = new Vue({
             this.telefonoSecundario = elector.telefono_secundario
             this.fechaNacimiento = elector.fecha_nacimiento
             this.tipoVoto = elector.tipo_voto
-            this.selectedEstado = elector.estado_id
-            await this.getMunicipios()
-            this.selectedMunicipio = elector.municipio_id
-            await this.getParroquias()
-            this.selectedParroquia = elector.parroquia_id
-            await this.getCentroVotacion()
-            this.selectedCentroVotacion = elector.centro_votacion_id
+            //this.selectedEstado = elector.estado_id
+            //await this.getMunicipios()
+            //this.selectedMunicipio = elector.municipio_id
+            //await this.getParroquias()
+            //this.selectedParroquia = elector.parroquia_id
+            //await this.getCentroVotacion()
+            //this.selectedCentroVotacion = elector.centro_votacion_id
             this.nacionalidad = elector.nacionalidad
             this.primerNombre = elector.primer_nombre
             this.segundoNombre = elector.segundo_nombre == "null" || elector.segundo_nombre == null ? "" : elector.segundo_nombre
@@ -407,7 +405,6 @@ const app = new Vue({
             this.selectedPartidoPolitico = elector.partido_politico_id
             this.selectedMovilizacion = elector.movilizacion_id??""
         },  
-        
         async fetch(link = ""){
 
             let res = await axios.get(link == "" ? "{{ url('api/raas/ubch/fetch') }}"+"?_token={{ csrf_token() }}" : link.url+"&_token={{ csrf_token() }}")
@@ -470,7 +467,6 @@ const app = new Vue({
             this.storeLoader = false
 
         },
-
         async update(){
 
             try{
@@ -540,39 +536,41 @@ const app = new Vue({
 
         },
         async remove(id){
-
-            try{
-
-                let res = await axios.post("{{ url('api/raas/ubch/suspend') }}", {id: id})
-
-                if(res.data.success == true){
-
-                    swal({
-                        text:res.data.msg,
-                        icon: "success"
-                    })
-
-                    this.fetch(this.page)
-
-                }else{
-             
-                    swal({
-                        text:res.data.msg,
-                        icon: "error"
-                    })
-
+            Swal.fire({
+                title: '¿Estás seguro de eliminar este registro?',
+                text: "No podrás revertirlo",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, eliminar',
+                cancelButtonText: 'Cancelar',
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try{
+                        let res = await axios.post("{{ url('api/raas/ubch/suspend') }}", {id: id})
+                        if(res.data.success == true){
+                            swal({
+                                text:res.data.msg,
+                                icon: "success"
+                            })
+                            this.fetch(this.page)
+                        }else{
+                            swal({
+                                text:res.data.msg,
+                                icon: "error"
+                            })
+                        }
+                    }catch(err){
+                        swal({
+                            text:"Hay algunos campos que debes revisar",
+                            icon: "error"
+                        })
+                        this.errors = err.response.data.errors
+                    }
                 }
+            })
 
-            }catch(err){
-      
-                swal({
-                    text:"Hay algunos campos que debes revisar",
-                    icon: "error"
-                })
-
-                this.errors = err.response.data.errors
-
-            }
 
 
         },
@@ -606,14 +604,12 @@ const app = new Vue({
             this.parroquias = res.data
 
         },
-
         async getCentroVotacion(){
             this.selectedCentroVotacion = ""
             let res = await axios.get("{{ url('/api/centro-votacion') }}"+"/"+this.selectedParroquia)
             this.centroVotaciones = res.data
 
         },
-
         async getPartidosPoliticos(){
 
             let res = await axios.get("{{ url('/api/partidos-politicos') }}")
@@ -622,7 +618,6 @@ const app = new Vue({
                 this.selectedPartidoPolitico=res.data[0].id;
             }
         },
-
         async getMovilizaciones(){
 
             let res = await axios.get("{{ url('/api/movilizacion') }}")
