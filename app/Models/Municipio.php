@@ -39,4 +39,10 @@ class Municipio extends Model
         return $this->hasMany(PersonalSalaTecnica::class);
 
     }
+
+    public function estado(){
+
+        return $this->belongsTo(Estado::class);
+
+    }
 }

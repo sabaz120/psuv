@@ -50,7 +50,6 @@
             tiposDeMovilizacion:[],
             results:[],
             //paginate
-            modalTitle:"Crear Jefe de Calle",
             currentPage:1,
             links:"",
             totalPages:"",
@@ -71,14 +70,19 @@
         },
         methods: {
             async getMunicipios(){
-                this.loading=true;
-                let res = await axios.get("{{ url('/api/municipios') }}",{
-                    params:{
-                        municipio_id:this.form.municipio_id
-                    }
-                })
-                this.municipios = res.data
-                this.loading=false;
+                if(this.form.municipio_id){
+                    this.loading=true;
+                    let res = await axios.get("{{ url('/api/municipios') }}",{
+                        params:{
+                            //estado_name:"FALCON",
+                            municipio_id:this.form.municipio_id
+                        }
+                    })
+                    this.municipios = res.data
+                    this.loading=false;
+                }else{
+                    this.parroquias=[];
+                }
             },
             async getParroquias(){
                 this.loading=true;
@@ -89,12 +93,16 @@
                 this.centroVotaciones=[];
                 this.comunidades=[];
                 this.calles=[];
-                let res = await axios.get("{{ url('/api/parroquias') }}",{
-                    params:{
-                        municipio_id:this.form.municipio_id
-                    }
-                })
-                this.parroquias = res.data
+                if(parseInt(this.form.municipio_id)){
+                    let res = await axios.get("{{ url('/api/parroquias') }}",{
+                        params:{
+                            municipio_id:this.form.municipio_id
+                        }
+                    })
+                    this.parroquias = res.data
+                }else{
+                    this.parroquias=[];
+                }
                 this.loading=false;
             },
             async getCentroVotacion(){
@@ -159,18 +167,6 @@
                         icon:"error"
                     });
                     return false;
-                }else if(this.form.telefono_principal==""){
-                    swal({
-                        text:"Debe ingresar un teléfono principal",
-                        icon:"error"
-                    });
-                    return false;
-                }else if(this.form.telefono_secundario==""){
-                    swal({
-                        text:"Debe ingresar un teléfono secundario",
-                        icon:"error"
-                    });
-                    return false;
                 }else if(this.form.movilizacion_id==""){
                     swal({
                         text:"Debe seleccionar un tipo de movilización",
@@ -229,7 +225,6 @@
                 this.form.rol_equipo_politico_id=entity.roles_nivel_territorial?.roles_equipo_politico_id;
             },
             async suspend(entityId){
-
                 Swal.fire({
                 title: '¿Estás seguro de eliminar este registro?',
                 text: "No podrás revertirlo",
@@ -239,37 +234,36 @@
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Si, eliminar',
                 cancelButtonText: 'Cancelar',
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    try {
-                        this.loading = true;
-                        const response = await axios({
-                            method: 'DELETE',
-                            responseType: 'json',
-                            url: "{{ url('api/raas/jefe-calle') }}"+"/"+entityId,
-                            data: this.form
-                        });
-                        this.loading = false;
-                        swal({
-                            text:response.data.message,
-                            icon: "success"
-                        }).then(ans => {
-                            $('.marketModal').modal('hide')
-                            $('.modal-backdrop').remove()
-        
-                        })
-                        this.clearForm();
-                        this.fetch();
-                    } catch (err) {
-                        this.loading = false;
-                        swal({
-                            text:err.response.data.message,
-                            icon:"error"
-                        });
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        try {
+                            this.loading = true;
+                            const response = await axios({
+                                method: 'DELETE',
+                                responseType: 'json',
+                                url: "{{ url('api/raas/jefe-calle') }}"+"/"+entityId,
+                                data: this.form
+                            });
+                            this.loading = false;
+                            swal({
+                                text:response.data.message,
+                                icon: "success"
+                            }).then(ans => {
+                                $('.marketModal').modal('hide')
+                                $('.modal-backdrop').remove()
+            
+                            })
+                            this.clearForm();
+                            this.fetch();
+                        } catch (err) {
+                            this.loading = false;
+                            swal({
+                                text:err.response.data.message,
+                                icon:"error"
+                            });
+                        }
                     }
-                }
-            })
-
+                })
             },
             async update(){
               //Validations
@@ -288,18 +282,6 @@
                 }else if(this.form.rol_equipo_politico_id==""){
                     swal({
                         text:"Debe seleccionar un rol",
-                        icon:"error"
-                    });
-                    return false;
-                }else if(this.form.telefono_principal==""){
-                    swal({
-                        text:"Debe ingresar un teléfono principal",
-                        icon:"error"
-                    });
-                    return false;
-                }else if(this.form.telefono_secundario==""){
-                    swal({
-                        text:"Debe ingresar un teléfono secundario",
                         icon:"error"
                     });
                     return false;
