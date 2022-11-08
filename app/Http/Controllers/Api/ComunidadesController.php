@@ -14,15 +14,21 @@ class ComunidadesController extends Controller
         try {
             $parroquia_id = $request->input('parroquia_id');
             $municipio_id = $request->input('municipio_id');
+            $centro_votacion_id = $request->input('centro_votacion_id');
             $auth = $request->input('auth');
             //Init query
             $query=Model::query();
             //Filters
+            if ($centro_votacion_id) {
+                $query->where('centro_votacion_id', $centro_votacion_id);
+            }
             if ($parroquia_id) {
-                $query->where('parroquia_id', $parroquia_id);
+                $query->whereHas("centroVotacion", function($q) use($parroquia_id){
+                    $q->where('parroquia_id', $parroquia_id);
+                });
             }
             if($municipio_id){
-                $query->whereHas('parroquia',function($query) use($municipio_id){
+                $query->whereHas('centroVotacion.parroquia',function($query) use($municipio_id){
                     $query->where("municipio_id",$municipio_id);
                 });
             }
