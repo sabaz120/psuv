@@ -105,6 +105,12 @@ class JefeCalleController extends Controller
                 $data['personal_caraterizacion_id']=$elector->id;
             }else{
                 $data['personal_caraterizacion_id']=$elector->id;
+                $elector->update([
+                    "telefono_principal"=>$request->telefono_principal,
+                    "telefono_secundario"=>$request->telefono_secundario,
+                    "movilizacion_id"=>$request->movilizacion_id,
+                    "tipo_voto"=>$request->tipo_voto,
+                ]);
             }
             $rolEquipoPolitico=\App\Models\RolesEquipoPolitico::find($request->rol_equipo_politico_id);
             if(!$rolEquipoPolitico->rolNivelTerritorial){

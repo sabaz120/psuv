@@ -3,7 +3,8 @@
 namespace App\Http\Requests\RAAS\JefeCalle;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use \Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 class StoreRequest extends FormRequest
 {
     /**
@@ -33,5 +34,20 @@ class StoreRequest extends FormRequest
             "calle_id" => "required|exists:calle,id",
             "rol_equipo_politico_id"=>"required|exists:roles_equipo_politico,id"
         ];
+    }
+    
+    protected function failedValidation(Validator $validator)
+    {
+        /**
+         * @var array $response Is our response data.
+         */
+        $response = [
+            "status" => 'Error', // Here I added a new field on JSON response.
+            "message" =>"Existen elementos que no han sido seleccionados", // Here I used a custom message.
+            "errors" => $validator->errors(), // And do not forget to add the common errors.
+        ];
+
+        // Finally throw the HttpResponseException.
+        throw new HttpResponseException(response()->json($response, 422));
     }
 }
