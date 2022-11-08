@@ -74,7 +74,7 @@
                     this.loading=true;
                     let res = await axios.get("{{ url('/api/municipios') }}",{
                         params:{
-                            //estado_name:"FALCON",
+                            estado_name:"FALCON",
                             municipio_id:this.form.municipio_id
                         }
                     })
