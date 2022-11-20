@@ -6,7 +6,7 @@ use App\Models\PersonalCaracterizacion as Model;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\RaasStructure;
+use App\Exports\RassBaseStructure\RaasStructure;
 use App\Exports\RaasVoterMobilization;
 class RaasController extends Controller
 {
@@ -15,7 +15,7 @@ class RaasController extends Controller
         $municipio_nombre = $request->input('municipio_nombre');
         $parroquia_nombre = $request->input('parroquia_nombre');
         $now=\Carbon\Carbon::now()->format('d-m-Y H:i:s');
-        $excelName='Reporte estructura RAAS_'.$now.'.xlsx';
+        $excelName='Reporte estructura de base_'.$now.'.xlsx';
         return Excel::download(new RaasStructure($municipio_nombre,$parroquia_nombre), $excelName);
     }//
     public function voterMobilization(Request $request){

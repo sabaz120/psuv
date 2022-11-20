@@ -379,7 +379,7 @@ License: You must have a valid license purchased only from themeforest(the above
 													<i class="menu-bullet menu-bullet-line">
 														<span></span>
 													</i>
-													<span class="menu-text text-white">Estructura RAAS</span>
+													<span class="menu-text text-white">Estructura de base</span>
 												</a>
 											</li>
 											@endcan
