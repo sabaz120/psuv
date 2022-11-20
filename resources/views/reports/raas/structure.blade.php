@@ -17,7 +17,7 @@ $municipios=\App\Models\Municipio::all();
                 <!--begin::Header-->
                 <div class="card-header flex-wrap border-0 pt-6 pb-0">
                     <div class="card-title">
-                        <h3 class="card-label">Reporte Estructura RAAS</h3>
+                        <h3 class="card-label">Estructura de base</h3>
                     </div>
                 </div>
                 <!--end::Header-->
