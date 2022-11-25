@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Api\Reportes;
 
-use App\Models\PersonalCaracterizacion as Model;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\RassBaseStructure\RaasStructure;
 use App\Exports\RaasVoterMobilization;
+use App\Exports\RassBaseStructure\{
+    RaasStructure,
+};
+use App\Exports\RaasParticipation\ConstructSheets;
+    
 class RaasController extends Controller
 {
     public function structure(Request $request){
@@ -37,5 +40,21 @@ class RaasController extends Controller
             // $response= $this->getErrorResponse($e, 'Error al listar los registros');
         }
     }//index()
-
+    public function participation(Request $request){
+        //Reporte estructura raas
+        $type = $request->input('type');
+        $municipio_id = $request->input('municipio_id');
+        $parroquia_id = $request->input('parroquia_id');
+        $comunidad_id = $request->input('comunidad_id');
+        $calle_id = $request->input('calle_id');
+        $now=\Carbon\Carbon::now()->format('d-m-Y H:i:s');
+        $excelName='Reporte_participacion_'.$now.'.xlsx';
+        return Excel::download(new ConstructSheets(
+            $type,
+            $municipio_id,
+            $parroquia_id,
+            $comunidad_id,
+            $calle_id
+        ), $excelName);
+    }//
 }
