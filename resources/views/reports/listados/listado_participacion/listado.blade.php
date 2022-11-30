@@ -22,7 +22,7 @@
                         <div class="col-lg-3">
                             <div class="form-group">
                                 <label>Estructura base</label>
-                                <select class="form-control" v-model="selectedTipo">
+                                <select class="form-control" v-model="selectedTipo" @change="changeType()">
                                     <option value="UBCH">UBCH</option>
                                     <option value="Comunidad">Comunidad</option>
                                     <option value="Calle">Calle</option>
@@ -47,7 +47,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-3" >
+                        <div class="col-lg-3" v-if="selectedTipo!='UBCH'">
                             <div class="form-group">
                                 <label>Comunidad</label>
                                 <select class="form-control" v-model="selectedComunidad" @change="getCalles()">
@@ -56,7 +56,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-3" >
+                        <div class="col-lg-3" v-if="selectedTipo!='UBCH' && selectedTipo!='Comunidad'">
                             <div class="form-group">
                                 <label>Calle</label>
                                 <select class="form-control" v-model="selectedCalle">

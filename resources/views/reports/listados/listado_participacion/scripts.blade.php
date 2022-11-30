@@ -49,10 +49,18 @@
                 this.parroquias = res.data
             },
             async getComunidades(){
+                if(this.selectedTipo=='UBCH'){
+                    this.comunidades=[];
+                    return false;
+                } 
                 let res = await axios.get("{{ url('/api/comunidades') }}"+"/"+this.selectedParroquia)
                 this.comunidades = res.data
             },
             async getCalles(){
+                if(this.selectedTipo=='UBCH' || this.selectedTipo=='Comunidad'){
+                    this.calles=[];
+                    return false;
+                }
                 let filters = {
                     comunidad_id:this.selectedComunidad,
                     order_by:"nombre",
@@ -87,6 +95,14 @@
                 })
                 this.loading=false;
             },
+            changeType(){
+                if(this.selectedTipo=="UBCH"){
+                    this.selectedComunidad="0";
+                    this.selectedCalle="0";
+                }else if(this.selectedTipo=="Comunidad"){
+                    this.selectedCalle="0";
+                }
+            }
         },
         async created() {
             await this.getMunicipios()

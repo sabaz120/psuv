@@ -416,7 +416,14 @@ License: You must have a valid license purchased only from themeforest(the above
 												</a>
 											</li>
 											@endcan
-	
+											<li class="menu-item" aria-haspopup="true">
+												<a href="{{ url('reportes/listado-participacion') }}" class="menu-link">
+													<i class="menu-bullet menu-bullet-line">
+														<span></span>
+													</i>
+													<span class="menu-text text-white">Listado participación</span>
+												</a>
+											</li>
 										</ul>
 									</div>
 								</li>
