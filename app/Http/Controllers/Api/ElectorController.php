@@ -41,7 +41,7 @@ class ElectorController extends Controller
                 $response["elector"]=$elector;
                 return response()->json($response);
             }
-            dd($elector);
+            //dd($elector);
             $response["success"]=false;
             $response["msg"]="Elector no encontrado";
             return response()->json($response);

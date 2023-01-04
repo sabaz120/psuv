@@ -61,9 +61,10 @@ use App\Http\Controllers\Api\SalaTecnica\{
 };
 
 use App\Http\Controllers\Api\MetasUBCH\MetasUBCHController;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
-use Postmark\PostmarkClient;
+use App\Http\Controllers\Api\Participacion\{
+    ParticipacionController
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -150,6 +151,13 @@ Route::prefix('raas')->group(function () {
     });
 
 });
+
+Route::prefix('participacion')->group(function () {
+    Route::post("/", [ParticipacionController::class, "store"])->name('api.participacion.store');
+    Route::delete("/", [ParticipacionController::class, "delete"])->name('api.participacion.delete');
+});
+
+
 
 Route::prefix('report')->group(function () {
     Route::get("/institutions/list", [InstitucionReportController::class, "institutionList"])->name('api.institutions.report.list');

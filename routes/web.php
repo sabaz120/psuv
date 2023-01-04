@@ -170,6 +170,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::view("estadistica/cierre-mesa", "reports.cierreCandidato.view");
     Route::view("estadistica/cierre-mesa-partidos", "reports.cierrePartido.view");
     Route::view("/reportes/listado-participacion", "reports.listados.listado_participacion.listado");
+    Route::view("/participacion/gestionar", "participacion.gestionar.view");
 
 });
 
