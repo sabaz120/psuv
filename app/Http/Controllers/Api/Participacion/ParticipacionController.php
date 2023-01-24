@@ -17,6 +17,99 @@ use DB;
 class ParticipacionController extends Controller
 {
     use PersonalCaracterizacionTrait;
+    
+    public function index(Request $request){
+        $tipo=$request->input("tipo");
+        $estado_id=$request->input("estado_id");
+        $municipio_id=$request->input("municipio_id");
+        $parroquia_id=$request->input("parroquia_id");
+        $centro_votacion_id=$request->input("centro_votacion_id");
+        $parroquia_id=$request->input("parroquia_id");
+        $calle_id=$request->input("calle_id");
+        $comunidad_id=$request->input("comunidad_id");
+        $query=null;
+        if($tipo=="Comunidad"){
+            $query=ParticipacionComunidadRol::query();
+            if($estado_id){
+                $query->whereHas("comunidad.centroVotacion.parroquia.municipio",function($q)use($estado_id){
+                    $q->where("estado_id",$estado_id);
+                });
+            }
+            if($municipio_id){
+                $query->whereHas("comunidad.centroVotacion.parroquia",function($q)use($municipio_id){
+                    $q->where("municipio_id",$municipio_id);
+                });
+            }
+            if($parroquia_id){
+                $query->whereHas("comunidad.centroVotacion",function($q)use($parroquia_id){
+                    $q->where("parroquia_id",$parroquia_id);
+                });
+            }
+            if($centro_votacion_id){
+                $query->whereHas("comunidad",function($q)use($centro_votacion_id){
+                    $q->where("centro_votacion_id",$centro_votacion_id);
+                });
+            }
+            if($comunidad_id){
+                $query->where("comunidad_id",$comunidad_id);
+            }
+
+        }else if($tipo=="UBCH"){
+            $query=ParticipacionUbchRol::query();
+            if($estado_id){
+                $query->whereHas("centroVotacion.parroquia.municipio",function($q)use($estado_id){
+                    $q->where("estado_id",$estado_id);
+                });
+            }
+            if($municipio_id){
+                $query->whereHas("centroVotacion.parroquia",function($q)use($municipio_id){
+                    $q->where("municipio_id",$municipio_id);
+                });
+            }
+            if($parroquia_id){
+                $query->whereHas("centroVotacion",function($q)use($parroquia_id){
+                    $q->where("parroquia_id",$parroquia_id);
+                });
+            }
+            if($centro_votacion_id){
+                $query->where("centro_votacion_id",$centro_votacion_id);
+            }
+        }else{
+            $query=ParticipacionCalleRol::query();
+            if($estado_id){
+                $query->whereHas("calle.comunidad.centroVotacion.parroquia.municipio",function($q)use($estado_id){
+                    $q->where("estado_id",$estado_id);
+                });
+            }
+            if($municipio_id){
+                $query->whereHas("calle.comunidad.centroVotacion.parroquia",function($q)use($municipio_id){
+                    $q->where("municipio_id",$municipio_id);
+                });
+            }
+            if($parroquia_id){
+                $query->whereHas("calle.comunidad.centroVotacion",function($q)use($parroquia_id){
+                    $q->where("parroquia_id",$parroquia_id);
+                });
+            }
+            if($centro_votacion_id){
+                $query->whereHas("calle.comunidad",function($q)use($centro_votacion_id){
+                    $q->where("centro_votacion_id",$centro_votacion_id);
+                });
+            }
+            if($comunidad_id){
+                $query->whereHas("calle",function($q)use($comunidad_id){
+                    $q->where("comunidad_id",$comunidad_id);
+                });
+            }
+            if($calle_id){
+                $query->where("calle_id",$calle_id);
+            }
+        }
+        $query->with("personalCaracterizacion");
+        $result=$query->get();
+        $response = $this->getSuccessResponse($result);
+        return $this->response($response, 200);        
+    }
 
     function store(Request $request){
 

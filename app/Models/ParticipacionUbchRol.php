@@ -14,4 +14,10 @@ class ParticipacionUbchRol extends Model
         "personal_caracterizacion_id",
         "fecha_participacion"
     ];
+    public function centroVotacion(){
+        return $this->belongsTo(CentroVotacion::class,"centro_votacion_id");
+    }
+    public function personalCaracterizacion(){
+        return $this->belongsTo(PersonalCaracterizacion::class,"personal_caracterizacion_id");
+    }
 }

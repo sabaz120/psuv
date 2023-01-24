@@ -51,12 +51,33 @@
             }
         },
         methods: {
+            async getPersons(){
+                let res = await axios.get("{{ url('/api/participacion') }}",{
+                    params:{
+                        tipo:this.selectedTipo,
+                        municipio_id:this.selectedMunicipio,
+                        parroquia_id:this.selectedParroquia,
+                        centro_votacion_id:this.selectedCentroVotacion,
+                        comunidad_id:this.selectedComunidad,
+                        calle_id:this.selectedCalle,
+                    }
+                })
+                this.assignedPersons = res.data.data.map(function(person){
+                    return {
+                        id:person.id,
+                        cedula:person.personal_caracterizacion.cedula,
+                        full_name:person.personal_caracterizacion.full_name,
+                        telefono_principal:person.personal_caracterizacion.telefono_principal,
+                    }
+                })
+            },
             async getMunicipios(){
                 this.selectedParroquia = "0"
                 this.selectedComunidad = "0"
                 this.selectedCentroVotacion="0"
                 let res = await axios.get("{{ url('/api/municipios') }}")
                 this.municipios = res.data
+                this.getPersons();
             },
             async getParroquias(){
                 this.selectedParroquia = "0"
@@ -64,6 +85,7 @@
                 this.selectedCentroVotacion="0"
                 let res = await axios.get("{{ url('/api/parroquias') }}"+"/"+this.selectedMunicipio)
                 this.parroquias = res.data
+                this.getPersons();
             },
             async getComunidades(){
                 if(this.selectedTipo=='UBCH'){
@@ -72,6 +94,7 @@
                 } 
                 let res = await axios.get("{{ url('/api/comunidades') }}"+"/"+this.selectedParroquia)
                 this.comunidades = res.data
+                this.getPersons();
             },
             async getCalles(){
                 if(this.selectedTipo=='UBCH' || this.selectedTipo=='Comunidad'){
@@ -87,6 +110,7 @@
                     params: filters
                 })
                 this.calles = res.data
+                this.getPersons();
             },
             async getCentroVotacion(){
                 if(this.selectedParroquia=="0"){
@@ -96,6 +120,7 @@
                 this.selectedCentroVotacion = "0"
                 let res = await axios.get("{{ url('/api/centro-votacion') }}"+"/"+this.selectedParroquia)
                 this.centrosVotacion = res.data
+                this.getPersons();
             },
             changeType(){
                 if(this.selectedTipo=="UBCH"){
@@ -106,6 +131,7 @@
                     this.selectedCalle="0";
                 }
                 this.assignedPersons=[];
+                this.getPersons();
             },
             isNumber(evt) {
                 evt = (evt) ? evt : window.event;
@@ -274,6 +300,7 @@
             if(this.selectedMunicipio != "0"){
                 await this.getParroquias()
             }
+            await this.getPersons();
         }
     });
 </script>

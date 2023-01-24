@@ -153,6 +153,7 @@ Route::prefix('raas')->group(function () {
 });
 
 Route::prefix('participacion')->group(function () {
+    Route::get("/", [ParticipacionController::class, "index"])->name('api.participacion.index');
     Route::post("/", [ParticipacionController::class, "store"])->name('api.participacion.store');
     Route::delete("/", [ParticipacionController::class, "delete"])->name('api.participacion.delete');
 });

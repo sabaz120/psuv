@@ -47,7 +47,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-3" v-if="selectedTipo=='UBCH'">
+                        <div class="col-lg-3" v-if="selectedTipo=='UBCH'" @change="getPersons()">
                             <div class="form-group">
                                 <label>Centro de Votación</label>
                                 <select class="form-control" v-model="selectedCentroVotacion">
@@ -68,7 +68,7 @@
                         <div class="col-lg-3" v-if="selectedTipo!='UBCH' && selectedTipo!='Comunidad'">
                             <div class="form-group">
                                 <label>Calle</label>
-                                <select class="form-control" v-model="selectedCalle">
+                                <select class="form-control" v-model="selectedCalle" @change="getPersons()">
                                     <option value="0">Todos las calles</option>
                                     <option v-for="calle in calles" :value="calle.id">@{{ calle.nombre }}</option>
                                 </select>

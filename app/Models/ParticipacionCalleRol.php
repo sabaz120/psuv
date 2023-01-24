@@ -14,4 +14,10 @@ class ParticipacionCalleRol extends Model
         "personal_caracterizacion_id",
         "fecha_participacion"
     ];
+    public function calle(){
+        return $this->belongsTo(Calle::class,"calle_id");
+    }
+    public function personalCaracterizacion(){
+        return $this->belongsTo(PersonalCaracterizacion::class,"personal_caracterizacion_id");
+    }
 }

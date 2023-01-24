@@ -14,4 +14,10 @@ class ParticipacionComunidadRol extends Model
         "personal_caracterizacion_id",
         "fecha_participacion"
     ];
+    public function comunidad(){
+        return $this->belongsTo(Comunidad::class,"comunidad_id");
+    }
+    public function personalCaracterizacion(){
+        return $this->belongsTo(PersonalCaracterizacion::class,"personal_caracterizacion_id");
+    }
 }
