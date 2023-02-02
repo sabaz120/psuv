@@ -125,20 +125,23 @@ class ListadoController extends Controller
 
         }  
 
+        if($request->centro_votacion != "0"){
+    
+            $condition .= ' AND co.centro_votacion_id='.$request->centro_votacion;
+
+        }  
         
        
         $data = DB::select("SELECT mu.nombre municipio, pa.nombre parroquia, co.nombre comunidad, 
         (select cedula from public.personal_caracterizacion where id=jc.personal_caracterizacion_id) cedula_jefe_comunidad,
         (select (primer_apellido||' '||primer_nombre)from public.personal_caracterizacion where id=jc.personal_caracterizacion_id) jefe_comunidad, 
         (select telefono_principal from public.personal_caracterizacion where id=jc.personal_caracterizacion_id) telefono1_jefe_comunidad
-          FROM public.centro_votacion cv
-          join public.jefe_ubch ju on cv.id=ju.centro_votacion_id
-          join public.personal_caracterizacion pc on ju.personal_caracterizacion_id=pc.id
-          join public.jefe_comunidad jc on jc.jefe_ubch_id=ju.id
+          FROM public.jefe_comunidad jc
           join public.comunidad co on co.id=jc.comunidad_id
-          join public.parroquia pa on pa.id=co.parroquia_id
+          join public.centro_votacion cv on cv.id=co.centro_votacion_id
+          join public.parroquia pa on pa.id=cv.parroquia_id
           join public.municipio mu on mu.id=pa.municipio_id
-          WHERE jc.deleted_at::text is null and ju.deleted_at::text is null ".$condition." 
+          WHERE jc.deleted_at::text is null ".$condition."
           order by mu.nombre, pa.nombre, co.nombre;");
         return $data;
        
@@ -165,23 +168,25 @@ class ListadoController extends Controller
             $condition .= ' AND co.id='.$request->comunidad;
 
         }  
+
+        if($request->centro_votacion != "0"){
+    
+            $condition .= ' AND co.centro_votacion_id='.$request->centro_votacion;
+
+        }  
        
         $data = DB::select("SELECT mu.nombre municipio, pa.nombre parroquia, co.nombre comunidad, ca.nombre calle, 
         (select cedula from public.personal_caracterizacion where id=jca.personal_caraterizacion_id) cedula_jefe_calle,
         (select (primer_apellido||' '||primer_nombre)from public.personal_caracterizacion where id=jca.personal_caraterizacion_id) jefe_calle, 
         (select telefono_principal from public.personal_caracterizacion where id=jca.personal_caraterizacion_id) telefono1_jefe_calle
-          FROM public.centro_votacion cv
-          join public.jefe_ubch ju on cv.id=ju.centro_votacion_id
-          join public.personal_caracterizacion pc on ju.personal_caracterizacion_id=pc.id
-          join public.jefe_comunidad jc on jc.jefe_ubch_id=ju.id
-          join public.comunidad co on co.id=jc.comunidad_id
-          join public.jefe_calle jca on jca.jefe_comunidad_id=jc.id
-          join public.parroquia pa on pa.id=co.parroquia_id
-          join public.calle ca on ca.id=jca.calle_id
-          join public.municipio mu on mu.id=pa.municipio_id
-          WHERE jc.deleted_at::text is null and ju.deleted_at::text is null ".$condition."
-          order by mu.nombre, pa.nombre, co.nombre, ca.nombre;");
-
+        FROM public.jefe_calle jca
+        join public.calle ca on ca.id=jca.calle_id
+        join public.comunidad co on co.id=ca.comunidad_id
+        join public.centro_votacion cv on cv.id=co.centro_votacion_id
+        join public.parroquia pa on pa.id=cv.parroquia_id
+        join public.municipio mu on mu.id=pa.municipio_id
+        WHERE 1=1 ".$condition."
+        order by mu.nombre, pa.nombre, co.nombre, ca.nombre;");
         return $data;
        
 

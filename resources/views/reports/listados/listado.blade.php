@@ -41,9 +41,18 @@
                         <div class="col-lg-3">
                             <div class="form-group">
                                 <label>Parroquia</label>
-                                <select class="form-control" v-model="selectedParroquia" @change="getComunidades()">
+                                <select class="form-control" v-model="selectedParroquia" @change="getCentroVotacion()">
                                     <option value="0">Todas las parroquias</option>
                                     <option v-for="parroquia in parroquias" :value="parroquia.id">@{{ parroquia.nombre }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3" @change="getComunidades()" >
+                            <div class="form-group">
+                                <label>Centro de Votación</label>
+                                <select class="form-control" v-model="selectedCentroVotacion" :disabled="selectedTipoJefe == 1">
+                                    <option value="0">Todos los centros de votación</option>
+                                    <option v-for="centroVotacion in centrosVotacion" :value="centroVotacion.id">@{{ centroVotacion.nombre }}</option>
                                 </select>
                             </div>
                         </div>

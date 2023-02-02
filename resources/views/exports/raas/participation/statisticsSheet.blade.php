@@ -17,8 +17,8 @@
             <td>{{ $result->parroquia }}</td>
             <td>{{ $result->codigo_ubch }}</td>
             <td>{{ $result->nombre_ubch }}</td>
-            <td>{{ $result->comunidad }}</td>
-            <td>{{ $result->calle }}</td>
+            <td>{{ $result->comunidad??"" }}</td>
+            <td>{{ $result->calle??"" }}</td>
             <td>{{ $result->total_participacion }}</td>
         </tr>
     @endforeach

@@ -19,8 +19,8 @@
             <td>{{ $result->municipio }}</td>
             <td>{{ $result->parroquia }}</td>
             <td>{{ $result->nombre_ubch }}</td>
-            <td>{{ $result->comunidad }}</td>
-            <td>{{ $result->calle }}</td>
+            <td>{{ $result->comunidad??"" }}</td>
+            <td>{{ $result->calle??"" }}</td>
             <td>{{ $result->cedula }}</td>
             <td>{{ $result->nombre }}</td>
             <td>{{ $result->telefono }}</td>

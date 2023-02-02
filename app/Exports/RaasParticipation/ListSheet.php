@@ -47,7 +47,8 @@ class ListSheet implements FromView,WithTitle,ShouldAutoSize
         if ($this->type=="UBCH") {
             $raw=
             DB::select(DB::raw("
-                select 'UBCH' estructura_base, mu.nombre municipio, pa.nombre parroquia,codigo codigo_ubch, cv.nombre nombre_ubch, pc.cedula cedula, 
+                select 'UBCH' estructura_base, mu.nombre municipio, pa.nombre parroquia,codigo codigo_ubch, 
+                cv.nombre nombre_ubch, pc.cedula cedula, 
                 (pc.primer_apellido||' '||primer_nombre) nombre, telefono_principal telefono
                 from public.centro_votacion cv
                 join public.participacion_ubch_roles pubch on pubch.centro_votacion_id=cv.id
