@@ -66,6 +66,7 @@
                     return {
                         id:person.id,
                         cedula:person.personal_caracterizacion.cedula,
+                        centro_votacion_nombre:person.personal_caracterizacion.centro_votacion.nombre,
                         full_name:person.personal_caracterizacion.full_name,
                         telefono_principal:person.personal_caracterizacion.telefono_principal,
                     }
@@ -238,6 +239,7 @@
                     this.loading = false;
                     this.assignedPersons.push({
                         id:response.data.data.id,
+                        centro_votacion_nombre:response.data.data.personal_caracterizacion.centro_votacion.nombre,
                         cedula:this.elector.cedula_encontrada,
                         full_name:this.elector.full_name,
                         telefono_principal:this.elector.telefono_principal,

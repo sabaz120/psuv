@@ -121,6 +121,7 @@
                                             <th>Cédula</th>
                                             <th>Nombre</th>
                                             <th>Teléfono</th>
+                                            <th>Centro de votación</th>
                                             <th>Acción</th>
                                         </tr>
                                     </thead>
@@ -129,6 +130,7 @@
                                             <td>@{{person.cedula}}</td>
                                             <td>@{{person.full_name}}</td>
                                             <td>@{{person.telefono_principal}}</td>
+                                            <td>@{{person.centro_votacion_nombre}}</td>
                                             <td>
                                                 <button type="button" class="btn btn-primary font-weight-bold"  @click="deleteAssignPerson(index,person.id)" v-if="!loading">Eliminar</button>
                                             </td>

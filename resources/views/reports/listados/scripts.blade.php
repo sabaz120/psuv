@@ -23,13 +23,14 @@
                 selectedMunicipio:"0",
                 selectedParroquia:"0",
                 selectedComunidad:"0",
+                selectedCentroVotacion:"0",
                 searchedMunicipio:"0",
                 searchedParroquia:"0",
                 searchedCentroVotacion:"0",
                 municipios:[],
                 parroquias:[],
                 comunidades:[],
-                
+                centrosVotacion:[],
                 loading:false,
                 authMunicipio:"{{ \Auth::user()->municipio_id ? \Auth::user()->municipio_id : 0}}"
             }
@@ -55,20 +56,31 @@
 
             },
 
+            async getCentroVotacion(){
+                if(this.selectedParroquia=="0"){
+                    this.centrosVotacion = [];
+                    return false;
+                }
+                this.selectedCentroVotacion = "0"
+                let res = await axios.get("{{ url('/api/centro-votacion') }}"+"/"+this.selectedParroquia)
+                this.centrosVotacion = res.data
+            },
+
 
             downloadExcel(){
 
+                let paramsCentroVotacion = this.selectedCentroVotacion != "0" ? "&centro_votacion="+this.selectedCentroVotacion : "&centro_votacion=0"
                 let paramsComunidad = this.selectedParroquia != "0" ? "&comunidad="+this.selectedComunidad : "&comunidad=0"
                 let paramsParroquia = this.selectedMunicipio != "0" ? "&parroquia="+this.selectedParroquia : "&parroquia=0"
                 let paramsMunicipio = "municipio="+this.selectedMunicipio
 
-                window.location.href="{{ url('api/listado-jefe/download') }}"+"?"+paramsMunicipio+paramsParroquia+paramsComunidad+"&type="+this.selectedTipoJefe
+                window.location.href="{{ url('api/listado-jefe/download') }}"+"?"+paramsMunicipio+paramsParroquia+paramsComunidad+paramsCentroVotacion+"&type="+this.selectedTipoJefe
 
             },
 
             async getComunidades(){
 
-                let res = await axios.get("{{ url('/api/comunidades') }}"+"/"+this.selectedParroquia)
+                let res = await axios.get("{{ url('/api/comunidades') }}"+"/"+this.selectedCentroVotacion)
                 this.comunidades = res.data
 
             },

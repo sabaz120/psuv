@@ -105,7 +105,7 @@ class ParticipacionController extends Controller
                 $query->where("calle_id",$calle_id);
             }
         }
-        $query->with("personalCaracterizacion");
+        $query->with("personalCaracterizacion.centroVotacion");
         $result=$query->get();
         $response = $this->getSuccessResponse($result);
         return $this->response($response, 200);        
@@ -183,6 +183,7 @@ class ParticipacionController extends Controller
                 $entity=ParticipacionCalleRol::create($data);
             }
             DB::commit();
+            $entity->load("personalCaracterizacion.centroVotacion");
             $response = $this->getSuccessResponse($entity,"Registro exitoso");
         } catch (\Exception $e) {
             DB::rollBack();
