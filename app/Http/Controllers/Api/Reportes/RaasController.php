@@ -46,6 +46,7 @@ class RaasController extends Controller
         $municipio_id = $request->input('municipio_id');
         $parroquia_id = $request->input('parroquia_id');
         $comunidad_id = $request->input('comunidad_id');
+        $centro_votacion_id = $request->input('centro_votacion_id');
         $calle_id = $request->input('calle_id');
         $now=\Carbon\Carbon::now()->format('d-m-Y H:i:s');
         $excelName='Reporte_participacion_'.$now.'.xlsx';
@@ -54,7 +55,8 @@ class RaasController extends Controller
             $municipio_id,
             $parroquia_id,
             $comunidad_id,
-            $calle_id
+            $calle_id,
+            $centro_votacion_id
         ), $excelName);
     }//
 }

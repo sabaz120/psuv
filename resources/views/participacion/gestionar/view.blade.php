@@ -41,13 +41,13 @@
                         <div class="col-lg-3">
                             <div class="form-group">
                                 <label>Parroquia</label>
-                                <select class="form-control" v-model="selectedParroquia" @change="selectedTipo=='UBCH' ? getCentroVotacion() : getComunidades()">
+                                <select class="form-control" v-model="selectedParroquia" @change="getCentroVotacion()">
                                     <option value="0">Todas las parroquias</option>
                                     <option v-for="parroquia in parroquias" :value="parroquia.id">@{{ parroquia.nombre }}</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-3" v-if="selectedTipo=='UBCH'" @change="getPersons()">
+                        <div class="col-lg-3" @change="selectedTipo=='UBCH' ? getPersons() : getComunidades()">
                             <div class="form-group">
                                 <label>Centro de Votación</label>
                                 <select class="form-control" v-model="selectedCentroVotacion">
@@ -59,7 +59,7 @@
                         <div class="col-lg-3" v-if="selectedTipo!='UBCH'">
                             <div class="form-group">
                                 <label>Comunidad</label>
-                                <select class="form-control" v-model="selectedComunidad" @change="getCalles()">
+                                <select class="form-control" v-model="selectedComunidad" @change="selectedTipo=='Comunidad' ? getPersons() : getCalles()">
                                     <option value="0">Todos las comunidades</option>
                                     <option v-for="comunidad in comunidades" :value="comunidad.id">@{{ comunidad.nombre }}</option>
                                 </select>
