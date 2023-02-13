@@ -14,13 +14,15 @@ class StatisticSheet implements FromView,WithTitle,ShouldAutoSize
     public $parroquia_id;
     public $comunidad_id;
     public $calle_id;
-    public function __construct($type,$municipio_id,$parroquia_id,$comunidad_id,$calle_id)
+    public $centro_votacion_id;
+    public function __construct($type,$municipio_id,$parroquia_id,$comunidad_id,$calle_id,$centro_votacion_id=null)
     {
         $this->type = $type;
         $this->municipio_id = $municipio_id;
         $this->parroquia_id = $parroquia_id;
         $this->comunidad_id = $comunidad_id;
         $this->calle_id = $calle_id;
+        $this->centro_votacion_id = $centro_votacion_id;
     }
 
     
@@ -43,6 +45,8 @@ class StatisticSheet implements FromView,WithTitle,ShouldAutoSize
         $condition.=" AND co.id='".$this->comunidad_id."'";
         if($this->calle_id)
         $condition.=" AND ca.id='".$this->calle_id."'";
+        if($this->centro_votacion_id)
+        $condition.=" AND cv.id='".$this->centro_votacion_id."'";
         $raw=[];
         if ($this->type=="UBCH") {
             $raw=

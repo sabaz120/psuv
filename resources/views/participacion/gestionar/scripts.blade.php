@@ -93,7 +93,7 @@
                     this.comunidades=[];
                     return false;
                 } 
-                let res = await axios.get("{{ url('/api/comunidades') }}"+"/"+this.selectedParroquia)
+                let res = await axios.get("{{ url('/api/comunidades') }}"+"/"+this.selectedCentroVotacion)
                 this.comunidades = res.data
                 this.getPersons();
             },

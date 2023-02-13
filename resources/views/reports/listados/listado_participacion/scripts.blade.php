@@ -23,6 +23,7 @@
                 selectedMunicipio:"0",
                 selectedParroquia:"0",
                 selectedComunidad:"0",
+                selectedCentroVotacion:"0",
                 searchedMunicipio:"0",
                 searchedParroquia:"0",
                 searchedCentroVotacion:"0",
@@ -30,6 +31,7 @@
                 municipios:[],
                 parroquias:[],
                 comunidades:[],
+                centrosVotacion:[],
                 calles:[],
                 loading:false,
                 authMunicipio:"{{ \Auth::user()->municipio_id ? \Auth::user()->municipio_id : 0}}"
@@ -53,7 +55,7 @@
                     this.comunidades=[];
                     return false;
                 } 
-                let res = await axios.get("{{ url('/api/comunidades') }}"+"/"+this.selectedParroquia)
+                let res = await axios.get("{{ url('/api/comunidades') }}"+"/"+this.selectedCentroVotacion)
                 this.comunidades = res.data
             },
             async getCalles(){
@@ -71,10 +73,20 @@
                 })
                 this.calles = res.data
             },
+            async getCentroVotacion(){
+                if(this.selectedParroquia=="0"){
+                    this.centrosVotacion = [];
+                    return false;
+                }
+                this.selectedCentroVotacion = "0"
+                let res = await axios.get("{{ url('/api/centro-votacion') }}"+"/"+this.selectedParroquia)
+                this.centrosVotacion = res.data
+            },
             downloadExcel(){
                 let params={
                     municipio_id:this.selectedMunicipio,
                     parroquia_id:this.selectedParroquia,
+                    centro_votacion_id:this.selectedCentroVotacion,
                     comunidad_id:this.selectedComunidad,
                     calle_id:this.selectedCalle,
                     type:this.selectedTipo
@@ -97,6 +109,7 @@
             },
             changeType(){
                 if(this.selectedTipo=="UBCH"){
+                    this.selectedCentroVotacion="0";
                     this.selectedComunidad="0";
                     this.selectedCalle="0";
                 }else if(this.selectedTipo=="Comunidad"){

@@ -13,13 +13,15 @@ class ConstructSheets implements WithMultipleSheets
     public $parroquia_id;
     public $comunidad_id;
     public $calle_id;
-    public function __construct($type,$municipio_id=null,$parroquia_id=null,$comunidad_id=null,$calle_id=null)
+    public $centro_votacion_id;
+    public function __construct($type,$municipio_id=null,$parroquia_id=null,$comunidad_id=null,$calle_id=null,$centro_votacion_id=null)
     {
         $this->type = $type;
         $this->municipio_id = $municipio_id;
         $this->parroquia_id = $parroquia_id;
         $this->comunidad_id = $comunidad_id;
         $this->calle_id = $calle_id;
+        $this->centro_votacion_id = $centro_votacion_id;
     }
 
     /**
@@ -28,8 +30,8 @@ class ConstructSheets implements WithMultipleSheets
     public function sheets(): array
     {
         $sheets = [
-            new ListSheet($this->type,$this->municipio_id,$this->parroquia_id,$this->comunidad_id,$this->calle_id),
-            new StatisticSheet($this->type,$this->municipio_id,$this->parroquia_id,$this->comunidad_id,$this->calle_id),
+            new ListSheet($this->type,$this->municipio_id,$this->parroquia_id,$this->comunidad_id,$this->calle_id,$this->centro_votacion_id),
+            new StatisticSheet($this->type,$this->municipio_id,$this->parroquia_id,$this->comunidad_id,$this->calle_id,$this->centro_votacion_id),
         ];
 
         return $sheets;
