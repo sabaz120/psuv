@@ -33,7 +33,7 @@ class CallesController extends Controller
             }
             if($municipio_id){
                 $query->whereHas('comunidad',function($query) use($municipio_id){
-                    $query->whereHas('parroquia',function($query) use($municipio_id){
+                    $query->whereHas('centroVotacion.parroquia',function($query) use($municipio_id){
                         $query->where("municipio_id",$municipio_id);
                     });
                 });
