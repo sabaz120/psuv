@@ -138,7 +138,8 @@
             async fetch(link = ""){
                 let filters={
                     params:{
-                        search:this.searchText
+                        search:this.searchText,
+                        municipio_id:this.form.municipio_id
                     }
                 };
                 let res = await axios.get(link == "" ? "{{ route('api.jefe-calle.index') }}" : link.url,filters)
