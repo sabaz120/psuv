@@ -330,7 +330,7 @@
                 this.form.telefono_secundario="";
                 this.form.partido_politico_id=1;
                 this.form.movilizacion_id="";
-                this.form.municipio_id="0";
+                this.form.municipio_id="{{Auth::user()->municipio ? Auth::user()->municipio->id : 0}}";
                 this.form.parroquia_id="0";
                 this.form.centro_votacion_id="0";
                 this.cedula_jefe="";
