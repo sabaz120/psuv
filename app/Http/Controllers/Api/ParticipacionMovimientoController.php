@@ -20,6 +20,7 @@ class ParticipacionMovimientoController extends Controller
         try {
             $search = $request->input('search');
             $count_familiares = $request->input('count_familiares');
+            $movimientos = $request->input('movimientos');
             $includes= $request->input('includes') ? $request->input('includes') : [
                 "personalCaracterizacion.movilizacion",
             ];
@@ -36,7 +37,12 @@ class ParticipacionMovimientoController extends Controller
             if($count_familiares){
                 $query->withCount("familiares");
             }
-            
+            if(!is_null($movimientos)){
+                $movimientos=json_decode($movimientos);
+                is_array($movimientos) ? true : $movimientos = [$movimientos];
+                if(count($movimientos)>0)
+                $query->whereIn('movimiento_id',$movimientos);
+            }
             $query->orderBy("created_at","DESC");
             $query=$query->paginate(15);
             return response()->json($query);

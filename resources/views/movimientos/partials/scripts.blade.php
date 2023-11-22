@@ -300,7 +300,8 @@
                 let filters={
                     trabajador_municipio_id:"{{Auth::user()->municipio ? Auth::user()->municipio_id : 0}}",
                     search:this.searchText,
-                    count_familiares:1
+                    count_familiares:1,
+                    movimientos:"{{json_encode(Auth::user()->movimientos->pluck('movimiento_id')->all())}}"
                 };
                 let res = await axios.get(link == "" ? "{{ route('api.participacion.movimiento.index') }}" : link.url,{
                     params:filters
