@@ -61,7 +61,7 @@ class REPImportTask extends Command
                 $elector->estado_id = $row["EDO"];
                 $elector->municipio_id = $row["MUN"];
                 $elector->parroquia_id = $this->findParroquia($row["MUN"], $row["PAQ"]);
-                $elector->centro_votacion_id = $this->findCentroVotacion($row["CODIGO"]);
+                $elector->centro_votacion_id = $this->findCentroVotacion($row["CODIGO CENTRO"]);
                 $elector->save();
                 
     
