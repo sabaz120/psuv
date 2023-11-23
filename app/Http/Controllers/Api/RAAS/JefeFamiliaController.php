@@ -235,7 +235,7 @@ class JefeFamiliaController extends Controller
             }//cedula
             $entity=$query->first();
             if (!$entity) {
-                throw new \Exception('Jefe de Calle no encontrado', 404);
+                throw new \Exception('Jefe de Familia no encontrado', 404);
             }
             $response = $this->getSuccessResponse($entity);
         } catch (\Exception $e) {
