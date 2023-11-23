@@ -54,7 +54,7 @@
             calles:[],
 
             //paginate
-            modalTitle:"Crear Jefe de Familia",
+            modalTitle:"Crear Personal Voto Duro",
             currentPage:1,
             links:"",
             totalPages:"",
@@ -129,12 +129,6 @@
                         icon:"error"
                     });
                     return false;
-                }else if(this.familyForm.telefono_secundario==""){
-                    swal({
-                        text:"Debe ingresar un teléfono secundario",
-                        icon:"error"
-                    });
-                    return false;
                 }else if(this.familyForm.partido_politico_id==""){
                     swal({
                         text:"Debe seleccionar un partido político",
@@ -201,12 +195,6 @@
                 }else if(this.familyForm.telefono_principal==""){
                     swal({
                         text:"Debe ingresar un teléfono principal",
-                        icon:"error"
-                    });
-                    return false;
-                }else if(this.familyForm.telefono_secundario==""){
-                    swal({
-                        text:"Debe ingresar un teléfono secundario",
                         icon:"error"
                     });
                     return false;
@@ -312,12 +300,6 @@
                 }else if(this.form.telefono_principal==""){
                     swal({
                         text:"Debe ingresar un teléfono principal",
-                        icon:"error"
-                    });
-                    return false;
-                }else if(this.form.telefono_secundario==""){
-                    swal({
-                        text:"Debe ingresar un teléfono secundario",
                         icon:"error"
                     });
                     return false;
@@ -428,12 +410,6 @@
                 }else if(this.form.telefono_principal==""){
                     swal({
                         text:"Debe ingresar un teléfono principal",
-                        icon:"error"
-                    });
-                    return false;
-                }else if(this.form.telefono_secundario==""){
-                    swal({
-                        text:"Debe ingresar un teléfono secundario",
                         icon:"error"
                     });
                     return false;

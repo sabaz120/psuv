@@ -20,7 +20,8 @@ class JefeCalleController extends Controller
         try {
             $search = $request->input('search');
             $calle_id = $request->input('calle_id');
-            $personal_caracterizacion_id = $request->input('personal_caracterizacion_id');
+            $municipio_id = $request->input('municipio_id');            
+$personal_caracterizacion_id = $request->input('personal_caracterizacion_id');
             $jefe_comunidad_id = $request->input('jefe_comunidad_id');
             $includes= $request->input('includes') ? $request->input('includes') : [
                 "personalCaracterizacion.movilizacion",
@@ -52,6 +53,11 @@ class JefeCalleController extends Controller
                     ->orWhere("primer_apellido","LIKE","%{$search}%")
                     ->orWhere("segundo_nombre","LIKE","%{$search}%")
                     ->orWhere("segundo_apellido","LIKE","%{$search}%");
+                });
+            }
+            if ($municipio_id) {
+                $query->whereHas("calle.comunidad.centroVotacion.parroquia", function($q) use($municipio_id){
+                    $q->where('municipio_id', $municipio_id);
                 });
             }
             // $this->addFilters($request, $query);

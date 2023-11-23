@@ -30,7 +30,7 @@
                                 </g>
                             </svg>
                             <!--end::Svg Icon-->
-                        </span>Nueva Jefe de UBCH</button>
+                        </span>Nuevo Personal de UBCH</button>
                         <!--end::Button-->
 
                     </div>
@@ -228,7 +228,7 @@ const app = new Vue({
         create(){
             this.selectedId = ""
             this.action = "create"
-            this.modalTitle = "Crear Jefe de UBCH",
+            this.modalTitle = "Crear Personal de UBCH",
             this.selectedMunicipio = ""
             this.selectedEstado=""
             this.selectedParroquia = ""
@@ -264,7 +264,7 @@ const app = new Vue({
 
             this.selectedId = jefeId
             this.action = "edit"
-            this.modalTitle = "Editar Jefe de UBCH",
+            this.modalTitle = "Editar Personal de UBCH",
             this.readonlyCedula = false
             this.cedula = elector.cedula
             this.readonlyCentroVotacion = true
@@ -306,6 +306,42 @@ const app = new Vue({
         clearForm(){
             this.create()
         },
+        clearFormTest(clearCedula = true){
+            
+            if(clearCedula == true){
+                this.cedula = ""
+                this.nacionalidad = "V"
+            }
+            
+            this.action = "create"
+            this.modalTitle = "Crear Personal de UBCH",
+            this.selectedMunicipio = ""
+            this.selectedEstado=""
+            this.selectedParroquia = ""
+            this.selectedCentroVotacion = ""
+            this.selectedPartidoPolitico = ""
+            this.selectedMovilizacion = "",
+            this.selectedRolEquipoPolitico="";
+            this.municipios=[];
+            this.parroquias=[];
+            this.centroVotaciones=[];
+            this.nombre=""
+            this.telefonoPrincipal=""
+            this.telefonoSecundario=""
+            this.tipoVoto="Duro"
+            this.municipioId = ""
+            this.readonlyCedula = false
+            this.readonlyCentroVotacion = false
+            this.readonlyMunicipio = false
+            this.readonlyParroquia = false
+            this.readonlyEstado=false;
+            this.readonlyRolEquipoPolitico=false;
+            this.errors = []
+            if(this.partidosPoliticos.length>0){
+                this.selectedPartidoPolitico=this.partidosPoliticos[0].id;
+            }
+
+        },
         async searchCedula(){
             if(this.cedula == ""){
                 swal({
@@ -323,13 +359,13 @@ const app = new Vue({
                     cedula: this.cedula, municipio_id: "{{ \Auth::user()->municipio_id }}"
                 })
                 if(res.data.success == false){
-                    this.readonlyCedula = false
+                    this.readonlyCedula = true
                     if(this.action != 'edit')
-                    this.create()
-                    this.cedula="";
+                    this.clearFormTest(false)
+                    // this.cedula="";
                     swal({
-                        text:res.data.msg,
-                        icon:"error"
+                    text:"Esta cédula no está registrada en el CNE, sin embargo puedes añadir a la persona",
+                    icon:"warning"
                     })
                 }
                 else{
@@ -353,7 +389,7 @@ const app = new Vue({
                     })
             }
             this.cedulaSearching = false
-        },  
+        }, 
         async setElectorData(elector){
 
             this.nombre = elector.full_name

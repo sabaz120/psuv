@@ -433,7 +433,7 @@ const app = new Vue({
         },  
         async fetch(link = ""){
 
-            let res = await axios.get(link == "" ? "{{ url('api/raas/jefe-comunidad/fetch') }}"+"?municipio_id="+"{{ \Auth::user()->municipio_id }}" : link.url+"{{ \Auth::user()->municipio_id }}")
+            let res = await axios.get(link == "" ? "{{ url('api/raas/jefe-comunidad/fetch') }}"+"?municipio_id="+"{{ \Auth::user()->municipio_id }}" : link.url+"&municipio_id={{ \Auth::user()->municipio_id }}")
             this.jefesComunidad = res.data.data
             this.links = res.data.links
             this.currentPage = res.data.current_page

@@ -54,7 +54,7 @@
 
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="cedula">Cédula Jefe de Familia</label>
+                                <label for="cedula">Cédula de el Personal</label>
                                 <div class="d-flex">
                                     <div>
                                         <input type="tel" class="form-control" id="cedula" v-model="cedula_jefe" maxlength="8" @keypress="isNumber($event)">

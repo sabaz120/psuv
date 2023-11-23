@@ -1,6 +1,6 @@
 <!-- Modal-->
 <div class="modal fade marketModal"  data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">@{{ modalTitle }}</h5>
@@ -41,7 +41,7 @@
                         <div class="col-md-6">
                             <div class="form-group text-center">
                                 <label for="calle">Instituciones</label>
-                                <select class="form-control" v-model="form.instituciones" v-show="instituciones.length>0" multiple>
+                                <select size="12" class="form-control" v-model="form.instituciones" v-show="instituciones.length>0" multiple>
                                     <option :value="institucion.id" v-for="institucion in instituciones">@{{ institucion.nombre }}</option>
                                 </select>
                                 <select class="form-control" v-show="instituciones.length==0" disabled>
@@ -55,7 +55,7 @@
                         <div class="col-md-6">
                             <div class="form-group text-center">
                                 <label for="calle">Movimientos</label>
-                                <select class="form-control" v-model="form.movimientos" v-show="movimientos.length>0" multiple>
+                                <select size="12" class="form-control" v-model="form.movimientos" v-show="movimientos.length>0" multiple>
                                     <option :value="movimiento.id" v-for="movimiento in movimientos">@{{ movimiento.nombre }}</option>
                                 </select>
                                 <select class="form-control"  v-show="movimientos.length==0" disabled>

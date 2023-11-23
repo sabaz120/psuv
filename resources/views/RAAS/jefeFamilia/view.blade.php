@@ -15,7 +15,7 @@
                 <!--begin::Header-->
                 <div class="card-header flex-wrap border-0 pt-6 pb-0">
                     <div class="card-title">
-                        <h3 class="card-label">Jefe de Familia</h3>
+                        <h3 class="card-label">Listado de Voto Esequibo</h3>
                     </div>
                     <div class="card-toolbar">
                         <!--begin::Button-->
@@ -30,7 +30,7 @@
                                 </g>
                             </svg>
                             <!--end::Svg Icon-->
-                        </span>Nuevo Jefe de Familia</button>
+                        </span>Nuevo Voto Esequibo</button>
                         <!--end::Button-->
 
                     </div>
@@ -64,7 +64,7 @@
                                     <tr>
 
                                         <th class="datatable-cell datatable-cell-sort">
-                                            <span>Jefe de Familia</span>
+                                            <span>Nombre</span>
                                         </th>
 
                                         <th class="datatable-cell datatable-cell-sort">
@@ -99,7 +99,7 @@
                                             <button title="Editar" class="btn btn-success" data-toggle="modal" data-target=".marketModal" @click="edit(result)">
                                                 <i class="far fa-edit"></i>
                                             </button>
-                                            <button title="Gestionar núcleo familiar" class="btn btn-success" data-toggle="modal" data-target=".familyModal" @click="obtenerFamilia(result)">
+                                            <button hidden title="Gestionar núcleo familiar" class="btn btn-success" data-toggle="modal" data-target=".familyModal" @click="obtenerFamilia(result)">
                                                 <i class="fa fa-users"></i>
                                             </button>
                                             <button title="Suspender" class="btn btn-secondary"  @click="suspend(result.id)">

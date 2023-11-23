@@ -41,7 +41,7 @@ class JefeFamiliaController extends Controller
                 $query->where('jefe_calle_id', $jefe_calle_id);
             }
             if ($jefe_calle_municipio_id) {
-                $query->whereHas('JefeCalle.JefeComunidad.comunidad.parroquia', function($query) use($jefe_calle_municipio_id){
+                $query->whereHas('JefeCalle.calle.comunidad.centroVotacion.parroquia', function($query) use($jefe_calle_municipio_id){
                     $query->where('municipio_id',$jefe_calle_municipio_id);
                 });
             }

@@ -332,7 +332,7 @@
             async obtenerMunicipios() {
                 try {
                     this.loading = true;
-                    let filters = {}
+                    let filters = {estado_id:9}
                     const response = await axios({
                         method: 'get',
                         responseType: 'json',

@@ -290,10 +290,14 @@
             },
             async fetch(link = ""){
                 let filters={
-                    trabajador_municipio_id:"{{Auth::user()->municipio ? Auth::user()->municipio_id : 0}}",
+                    //trabajador_municipio_id:"{{Auth::user()->municipio ? Auth::user()->municipio_id : 0}}",
+		    trabajador_municipio_id:"{{Auth::user()->instituciones ? Auth::user()->instituciones_id : 0}}",
                     search:this.searchText,
-                    count_familiares:1
-                };
+                    count_familiares:1,
+                    instituciones:"{{json_encode(Auth::user()->instituciones->pluck('institucion_id')->all())}}"
+
+            
+    };
                 let res = await axios.get(link == "" ? "{{ route('api.participacion.institucion.index') }}" : link.url,{
                     params:filters
                 })
