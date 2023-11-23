@@ -47,7 +47,7 @@ class REPImportTask extends Command
         $users = (new FastExcel)->import(public_path('excel/rep.xlsx'), function ($row) {
             
             
-            if(Elector::where("cedula", $row["CEDULA"])->count() == 0){
+            if(Elector::where("cedula", $row["CEDULA"])->where("nacionalidad", $row["NAC"])->count() == 0){
 
                 $elector = new Elector;
                 $elector->nacionalidad = $row["NAC"];
@@ -57,10 +57,10 @@ class REPImportTask extends Command
                 $elector->primer_nombre = $row["NOMBRE 1"];
                 $elector->segundo_nombre = $row["NOMBRE 2"];
                 $elector->sexo = $row["SEXO"];
-                $elector->fecha_nacimiento = $row["FN"];
-                $elector->estado_id = $row["camp 1"];
-                $elector->municipio_id = $row["camp 2"];
-                $elector->parroquia_id = $this->findParroquia($row["camp 2"], $row["camp 3"]);
+                $elector->fecha_nacimiento = $row["F. NAC"];
+                $elector->estado_id = $row["EDO"];
+                $elector->municipio_id = $row["MUN"];
+                $elector->parroquia_id = $this->findParroquia($row["MUN"], $row["PAQ"]);
                 $elector->centro_votacion_id = $this->findCentroVotacion($row["CODIGO"]);
                 $elector->save();
                 
