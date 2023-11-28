@@ -100,6 +100,7 @@ Route::group(['middleware' => ['auth']], function() {
         Route::view('jefeCalle', 'RAAS.jefeCalle.view')->name("raas.jefe-calle");
        
         Route::view('jefeFamilia', 'RAAS.jefeFamilia.view')->name("raas.jefe-familia");
+        Route::view('votoDuro', 'RAAS.jefeFamilia.hard_vote')->name("raas.voto-duro");
     
         Route::view('reportes/estructura', 'reports.raas.structure');
         Route::view('reportes/movilizacion_electores', 'reports.raas.voter_mobilization');

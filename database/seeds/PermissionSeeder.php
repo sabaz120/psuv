@@ -44,7 +44,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'gestion centros de votacion'],
             ['name' => 'estadistica cierre mesa candidatos'],
             ['name' => 'estadistica cierre mesa partidos'],
-            ['name' => 'cierre mesa']
+            ['name' => 'cierre mesa'],
+            ['name' => 'gestion voto duro'],
         ];
         foreach ($rolesArray as $role) {
             Model::firstOrCreate(
