@@ -67,6 +67,12 @@ class PersonalCaracterizacion extends Model
 
     }
 
+    public function jefeFamiliaOwner(){
+
+        return $this->hasOne(JefeFamilia::class,"personal_caraterizacion_id");
+
+    }
+
     public function municipio(){
 
         return $this->belongsTo(Municipio::class);

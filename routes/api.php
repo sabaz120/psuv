@@ -148,6 +148,7 @@ Route::prefix('raas')->group(function () {
         Route::get("/voter_mobilization", [RaasController::class, "voterMobilization"])->name('api.raas.report.voter_mobilization');
         Route::get("/institutions/list", [InstitucionReportController::class, "institutionList"])->name('api.institutions.report.list');
         Route::get("/participation", [RaasController::class, "participation"])->name('api.raas.report.participation');
+        Route::get("/jefe-familia-pdf/{id}", [JefeFamiliaController::class, "downloadFamilifyPdf"])->name('api.jefe-familia.report.family');
     });
 
 });

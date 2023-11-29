@@ -253,7 +253,8 @@ class JefeCalleController extends Controller
             $query->with(
                 'personalCaracterizacion',
                 "calle",
-                "calles.calle"
+                "calles.calle",
+                "personalCaracterizacion.jefeFamiliaOwner"
             );
             if ($cedula) {
                 $query->whereHas('personalCaracterizacion', function($q) use($cedula){
