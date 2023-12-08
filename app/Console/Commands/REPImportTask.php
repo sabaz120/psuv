@@ -46,9 +46,9 @@ class REPImportTask extends Command
         $index = 0;
         $users = (new FastExcel)->import(public_path('excel/rep.xlsx'), function ($row) {
             
-            
+            dump($row["CEDULA"]);
             if(Elector::where("cedula", $row["CEDULA"])->where("nacionalidad", $row["NAC"])->count() == 0){
-
+		try{
                 $elector = new Elector;
                 $elector->nacionalidad = $row["NAC"];
                 $elector->cedula = $row["CEDULA"];
@@ -63,8 +63,9 @@ class REPImportTask extends Command
                 $elector->parroquia_id = $this->findParroquia($row["MUN"], $row["PAQ"]);
                 $elector->centro_votacion_id = $this->findCentroVotacion($row["CODIGO CENTRO"]);
                 $elector->save();
-                
-    
+                }catch(\Exception $error){
+			\Log::info($error);
+    		}
             }
             
     
@@ -74,15 +75,17 @@ class REPImportTask extends Command
     }
 
     function findParroquia($municipio, $parroquia){
-
         $codigoParroquia = CodigoCne::where("cod_mcpo_cne", $municipio)->where("cod_pq_cne", $parroquia)->first();
         return $codigoParroquia->parroquia_id;
 
     }
 
     function findCentroVotacion($centroVotacion){
-
+	
         $codigoParroquia = CodigoCne::where("cod_cv_cne", $centroVotacion)->first();
+	if(is_null($codigoParroquia)){
+		dump("centro votacion: ".$centroVotacion);
+	}
         return $codigoParroquia->centro_votacion_id;
 
     }

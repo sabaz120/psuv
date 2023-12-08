@@ -96,5 +96,9 @@ class PersonalCaracterizacion extends Model
         return $this->belongsTo(Movilizacion::class);
 
     }
+    public function jefeFamiliaOwner(){
 
+        return $this->hasOne(JefeFamilia::class,"personal_caraterizacion_id");
+
+    }
 }

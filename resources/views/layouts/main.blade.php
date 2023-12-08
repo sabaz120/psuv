@@ -327,7 +327,7 @@ License: You must have a valid license purchased only from themeforest(the above
 								<li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
 									<a href="javascript:;" class="menu-link menu-toggle">
 										<i class="menu-icon flaticon2-group text-white"></i>
-										<span class="menu-text text-white">Voto duro</span>
+										<span class="menu-text text-white">Voto esequibo</span>
 										<i class="menu-arrow"></i>
 									</a>
 									<div class="menu-submenu">
@@ -343,7 +343,7 @@ License: You must have a valid license purchased only from themeforest(the above
 													<i class="menu-bullet menu-bullet-line">
 														<span></span>
 													</i>
-													<span class="menu-text text-white">Gestionar votos duros</span>
+													<span class="menu-text text-white">Gestionar voto esequibo</span>
 												</a>
 											</li>
 										</ul>
@@ -355,7 +355,7 @@ License: You must have a valid license purchased only from themeforest(the above
 								<li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
 									<a href="javascript:;" class="menu-link menu-toggle">
 										<i class="menu-icon flaticon2-group text-white"></i>
-										<span class="menu-text text-white">Voto Esequibo</span>
+										<span class="menu-text text-white">1XFamilia</span>
 										<i class="menu-arrow"></i>
 									</a>
 									<div class="menu-submenu">
@@ -371,7 +371,7 @@ License: You must have a valid license purchased only from themeforest(the above
 													<i class="menu-bullet menu-bullet-line">
 														<span></span>
 													</i>
-													<span class="menu-text text-white">Gestionar Voto Esequibo</span>
+													<span class="menu-text text-white">Gestionar Núcleos Familiares</span>
 												</a>
 											</li>
 										</ul>

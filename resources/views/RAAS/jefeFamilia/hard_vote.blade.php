@@ -99,6 +99,7 @@
                             <button type="button" class="btn btn-primary font-weight-bold"  @click="store()" v-if="action == 'create' && !loading">Crear</button>
                             <button type="button" class="btn btn-primary font-weight-bold"  @click="update()" v-if="action == 'edit' && !loading">Actualizar</button>
                             <button type="button" class="btn btn-primary font-weight-bold"  @click="suspend()" v-if="action == 'suspend' && !loading">Suspender</button>
+<a v-if="jefe_calle?.personal_caracterizacion?.jefe_familia_owner && !loading" :href="urlReporteJefeFamilia+'/'+jefe_calle.personal_caracterizacion.jefe_familia_owner.id" target="_blank" class="btn btn-success font-weight-bold">Generar Reporte 1xCalle</a>
                             <div class="spinner spinner-primary ml-1 mr-13 mt-2" v-if="loading"></div>
                         </div>
                         <!--init: list-->
@@ -108,7 +109,7 @@
                                     <tr>
 
                                         <th class="datatable-cell datatable-cell-sort">
-                                            <span>Jefe de Familia</span>
+                                            <span>Nombre completo</span>
                                         </th>
 
                                         <th class="datatable-cell datatable-cell-sort">
@@ -118,10 +119,10 @@
                                         <th class="datatable-cell datatable-cell-sort">
                                             <span>Tipo voto</span>
                                         </th>
-
+{{--
                                         <th class="datatable-cell datatable-cell-sort">
                                             <span>N° Familiares</span>
-                                        </th>
+                                        </th>--}}
 
                                         <th class="datatable-cell datatable-cell-sort">
                                             <span>¿Movilización?</span>
@@ -137,7 +138,7 @@
                                         <td>@{{ result.personal_caracterizacion.full_name }}</td>
                                         <td>@{{ result.personal_caracterizacion.telefono_principal }}</td>
                                         <td>@{{ result.personal_caracterizacion.tipo_voto }}</td>
-                                        <td>@{{ result.familiares_count }}</td>
+{{--                                        <td>@{{ result.familiares_count }}</td>--}}
                                         <td>@{{ result.personal_caracterizacion.movilizacion.nombre }}</td>
                                         <td>
                                             <button title="Editar" class="btn btn-success" @click="edit(result)">

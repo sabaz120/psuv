@@ -253,7 +253,8 @@ $personal_caracterizacion_id = $request->input('personal_caracterizacion_id');
             $query->with(
                 'personalCaracterizacion',
                 "calle",
-                "calles.calle"
+                "calles.calle",
+                "personalCaracterizacion.jefeFamiliaOwner"
             );
             if ($cedula) {
                 $query->whereHas('personalCaracterizacion', function($q) use($cedula){

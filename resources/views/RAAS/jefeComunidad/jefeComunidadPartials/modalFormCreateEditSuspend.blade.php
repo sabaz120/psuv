@@ -77,7 +77,7 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label for="nombre">Nombre Jefe</label>
-                                <input type="text" class="form-control" id="nombre" v-model="nombre" readonly>
+                                <input type="text" class="form-control" id="nombre" v-model="nombre">
                                 <small v-if="errors.hasOwnProperty('nombre')">@{{ errors['nombre'][0] }}</small>
                             </div>
                         </div>

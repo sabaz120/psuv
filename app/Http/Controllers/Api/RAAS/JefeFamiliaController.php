@@ -10,7 +10,7 @@ use App\Models\Elector;
 use App\Http\Requests\RAAS\JefeFamilia\StoreRequest as StoreRequest;
 use App\Http\Requests\RAAS\JefeFamilia\UpdateRequest as UpdateRequest;
 use App\Traits\PersonalCaracterizacionTrait;
-
+use PDF;
 use DB;
 class JefeFamiliaController extends Controller
 {
@@ -387,5 +387,32 @@ class JefeFamiliaController extends Controller
         return $this->response($response, $code ?? 200);        
 
     }
-
+    function downloadFamilifyPdf($jefeFamiliaId,Request $request){
+        try{
+            $jefeFamilia=Model::findOrFail($jefeFamiliaId);
+            $jefeFamilia->load([
+                "familiares.centroVotacion",
+                "personalCaracterizacion",
+            ]);
+            $familiares=$jefeFamilia->familiares;
+            $datos=(object)[
+                "cedula"=>$jefeFamilia->personalCaracterizacion->cedula,
+                "nombre_completo"=>$jefeFamilia->personalCaracterizacion->primer_nombre." ".$jefeFamilia->personalCaracterizacion->segundo_nombre." ".$jefeFamilia->personalCaracterizacion->primer_apellido." ".$jefeFamilia->personalCaracterizacion->segundo_apellido,
+                "telefono"=>$jefeFamilia->personalCaracterizacion->telefono_principal,
+                "municipio_nombre"=>$jefeFamilia->personalCaracterizacion->municipio->nombre,
+                "parroquia_nombre"=>$jefeFamilia->personalCaracterizacion->parroquia->nombre,
+                "comunidad_nombre"=>$jefeFamilia->JefeCalle->calle->comunidad->nombre,
+                "cantidad_familiares"=>count($familiares),
+                "familiares"=>$familiares,
+            ];
+            $pdf = PDF::loadView('pdf.raas.jefe_familia', ["datos" => $datos]);
+            return $pdf->download('reporte_1_x_calle.pdf');
+        }catch(\Exception $e){
+            abort(404);
+            dd([
+                $e->getMessage(),
+                $e->getLine()
+            ]);
+        }
+    }//downloadFamilifyPdf()
 }

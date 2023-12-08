@@ -10,7 +10,7 @@
             //Class
             linkClass: "page-link",
             activeLinkClass: "page-link active-link bg-main",
-
+            urlReporteJefeFamilia:"{{ url('/api/raas/report/jefe-familia-pdf') }}",
             //Form
             form: {
                 jefe_calle_id: null,

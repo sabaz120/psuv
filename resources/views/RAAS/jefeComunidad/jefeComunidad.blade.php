@@ -388,10 +388,13 @@ const app = new Vue({
             })
 
             if(res.data.success == false){
-                this.readonlyCedula = false
+                this.readonlyCedula = true
+                //this.readonlyCedula = false
                 swal({
-                    text:res.data.msg,
-                    icon:"error"
+                    text:"Esta cédula no está registrada en el CNE, sin embargo puedes añadir a la persona",
+                    icon:"warning"
+                    //text:res.data.msg,
+                    //icon:"error"
                 })
             }
             else{

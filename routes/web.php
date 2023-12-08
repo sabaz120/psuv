@@ -29,6 +29,16 @@ use App\Http\Controllers\Api\Votaciones\CuadernilloController;
 |
 */
 
+Route::get("test-email", function() {
+    $to_email = "rodriguezwillian95@gmail.com";
+    Mail::send("emails.sendREP", ["url" => "hola"], function($message) use ($to_email) {
+            
+        $message->to($to_email, "Usuario")->subject("¡Tu archivo está listo!");
+        $message->from(env("MAIL_FROM_ADDRESS"), env("MAIL_FROM_NAME"));
+
+    });
+});
+
 Route::get('/', function () {
     return view('login');
 })->name("login")->middleware("guest");
